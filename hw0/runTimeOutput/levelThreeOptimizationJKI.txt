@@ -1,0 +1,4 @@
+Runtime for matrix #0: 0.00043
+Runtime for matrix #1: 0.00189
+Runtime for matrix #2: 0.00986
+Done
