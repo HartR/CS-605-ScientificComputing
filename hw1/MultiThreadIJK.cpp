@@ -9,48 +9,24 @@
 
 using namespace std;
 
-#define DIMENSION 3200
+#define DIMENSION 500
 #define SIZE DIMENSION * DIMENSION
 #define NUMTHREADS 8
 
-class Matrices
+class MatrixMultiply
 {
     private:
         double* matrix1;
         double* matrix2;
         double* output;
         double runtime;
-
-        void PopulateMatrices()
-        {
-                for (int j = 0; j < SIZE; j++)
-                {
-                    matrix1[j] = ((double)rand() / (RAND_MAX));
-                    matrix2[j] = ((double)rand() / (RAND_MAX));
-                }
-        }
+        pthread_t* threads;
 
         void AllocateMatrices()
         {
             matrix1 = new double[SIZE];
             matrix2 = new double[SIZE];
             output = new double[SIZE];
-        }
-
-    public:
-        Matrices()
-        {
-            AllocateMatrices();
-            PopulateMatrices();
-            PerformMultiIJK();
-            //PrintMatrix(output);
-        }
-
-        ~Matrices()
-        {
-            delete[] matrix1;
-            delete[] matrix2;
-            delete[] output;
         }
 
         //For use in debugging
@@ -72,6 +48,51 @@ class Matrices
                     cout << matrix[DIMENSION * row + column] << " ";
                 cout << endl;
             }  
+        }
+
+        void ResetResult()
+        {
+            delete[] output;
+            output = new double[SIZE];
+        }
+
+    public:
+        MatrixMultiply()
+        {
+            AllocateMatrices();
+            PopulateMatrices();
+            PerformMultiIJK();
+        }
+
+        ~MatrixMultiply()
+        {
+            delete[] matrix1;
+            delete[] matrix2;
+            delete[] output;
+        }
+
+        void PopulateMatrices()
+        {
+                for (int j = 0; j < SIZE; j++)
+                {
+                    matrix1[j] = ((double)rand() / (RAND_MAX));
+                    matrix2[j] = ((double)rand() / (RAND_MAX));
+                }
+        }
+
+        void PrintA()
+        {
+            PrintMatrix(matrix1);
+        }
+
+        void PrintB()
+        {
+            PrintMatrix(matrix2);
+        }
+
+        void PrintResult()
+        {
+            PrintMatrix(output);
         }
 
         void PerformMultiIJK()
@@ -97,7 +118,8 @@ class Matrices
 
 int main()
 {
-    Matrices matrices;
+    MatrixMultiply matrices;
+    matrices.PrintResult();
     cout << "done";
     return 0;
 }
