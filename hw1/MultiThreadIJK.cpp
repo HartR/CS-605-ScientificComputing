@@ -9,25 +9,29 @@
 
 using namespace std;
 
-#define DIMENSION 2500
+#define DIMENSION 20
 #define SIZE DIMENSION * DIMENSION
 
-        double* matrix1;
-        double* matrix2;
-        double* output;
-        double runtime;
-        int num_threads;
-        pthread_t* threads;
-        int step_i = 0;
+double* matrix1;
+double* matrix2;
+double* output;
+double runtime;
+int num_threads;
+pthread_t* threads;
+int step_i = 0;
 
 void* Multiply(void* arg) 
 { 
     int core = step_i++; 
-
-    for (int i = core * DIMENSION / num_threads; i < (core + 1) * DIMENSION / num_threads; i++)  
+    cout << "core number: " << core;
+    for (int i = core * DIMENSION / num_threads; i < (core + 1) * DIMENSION / num_threads; i++)
+    {  
         for (int j = 0; j < DIMENSION; j++)  
+        {
             for (int k = 0; k < DIMENSION; k++)  
                 output[i * DIMENSION + j] += matrix1[i * DIMENSION + k] * matrix2[k * DIMENSION + j]; 
+        }
+    }
 }
 
 class MatrixMultiply
@@ -113,9 +117,9 @@ class MatrixMultiply
 
         void PerformMultiIJK()
         {
-                        struct timeval start, end;
+            struct timeval start, end;
 
-                        gettimeofday(&start, NULL);
+            gettimeofday(&start, NULL);
 
             for (int i = 0; i < num_threads; i++) { 
                 int* p; 
@@ -124,37 +128,20 @@ class MatrixMultiply
 
             for (int i = 0; i < num_threads; i++)  
                 pthread_join(threads[i], NULL);
-                            gettimeofday(&end, NULL);
             
-            runtime = (end.tv_sec - start.tv_sec) * 1e6;
-            runtime = (runtime + (end.tv_usec - start.tv_usec)) * 1e-6;  
-            /*
-            struct timeval start, end;
-
-            gettimeofday(&start, NULL);
-            for (int i = 0; i < DIMENSION; i++) {
-                for (int j = 0; j < DIMENSION; j++) {
-                    for (int k = 0; k < DIMENSION; k++) {
-                        output[i * DIMENSION + j] += matrix1[i * DIMENSION + k] * matrix2[k * DIMENSION + j];
-                    }
-                    //cout << fixed << setprecision(5) << output[i * matrix_2_width + j] << " ";
-                }
-                //cout << endl;
-            }
             gettimeofday(&end, NULL);
             
             runtime = (end.tv_sec - start.tv_sec) * 1e6;
-            runtime = (runtime + (end.tv_usec - start.tv_usec)) * 1e-6;
-            */
+            runtime = (runtime + (end.tv_usec - start.tv_usec)) * 1e-6; 
         }
 };
 
 int main()
 {
-    int num = 32;
-    num_threads = num;
+    cout << "Input number of threads: " << endl;
+    cin >> num_threads;
     MatrixMultiply matrices;
-    //matrices.PrintResult();
+    matrices.PrintResult();
     cout << runtime << "done";
     return 0;
 }
