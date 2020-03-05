@@ -122,8 +122,8 @@ class MatrixMultiply
             gettimeofday(&start, NULL);
 
             for (int i = 0; i < num_threads; i++) { 
-                int* p; 
-                pthread_create(&threads[i], NULL, Multiply, (void*)p); 
+                void* threadpointer; 
+                pthread_create(&threads[i], NULL, Multiply, threadpointer); 
             }
 
             for (int i = 0; i < num_threads; i++)  
