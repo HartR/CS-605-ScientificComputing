@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <iostream>
+#include <cstdlib>
 #include <string>
 #include <fstream>
 #include <vector>
@@ -9,7 +10,7 @@
 
 using namespace std;
 
-#define DIMENSION 20
+#define DIMENSION 3200
 #define SIZE DIMENSION * DIMENSION
 
 double* matrix1;
@@ -18,13 +19,12 @@ double* output;
 double runtime;
 int num_threads;
 pthread_t* threads;
-int step_i = 0;
+int thread_iterator;
 
 void* Multiply(void* arg) 
 { 
-    int core = step_i++; 
-    cout << "core number: " << core;
-    for (int i = core * DIMENSION / num_threads; i < (core + 1) * DIMENSION / num_threads; i++)
+    thread_iterator++; 
+    for (int i = thread_iterator * DIMENSION / num_threads; i < (thread_iterator + 1) * DIMENSION / num_threads; i++)
     {  
         for (int j = 0; j < DIMENSION; j++)  
         {
@@ -41,6 +41,7 @@ class MatrixMultiply
 
         void InitVars()
         {
+            thread_iterator = 0;
             threads = new pthread_t[num_threads];
             matrix1 = new double[SIZE];
             matrix2 = new double[SIZE];
@@ -136,12 +137,12 @@ class MatrixMultiply
         }
 };
 
-int main()
+int main(int argc,char* argv[])
 {
-    cout << "Input number of threads: " << endl;
-    cin >> num_threads;
+    //input number of threads as command line argument
+    num_threads = atoi(argv[1]);
     MatrixMultiply matrices;
-    matrices.PrintResult();
-    cout << runtime << "done";
+    //matrices.PrintResult();
+    cout << "run time: " << runtime << endl;
     return 0;
 }
