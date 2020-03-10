@@ -19,12 +19,11 @@ double* output;
 double runtime;
 int num_threads;
 pthread_t* threads;
-int thread_iterator;
 
 void* Multiply(void* arg) 
 { 
-    thread_iterator++; 
-    for (int i = thread_iterator * DIMENSION / num_threads; i < (thread_iterator + 1) * DIMENSION / num_threads; i++)
+    long int thread_num = (long int) arg;
+    for (int i = thread_num * DIMENSION / num_threads; i < (thread_num + 1) * DIMENSION / num_threads; i++)
     {  
         for (int j = 0; j < DIMENSION; j++)  
         {
@@ -32,6 +31,7 @@ void* Multiply(void* arg)
                 output[i * DIMENSION + j] += matrix1[i * DIMENSION + k] * matrix2[k * DIMENSION + j]; 
         }
     }
+    return 0;
 }
 
 class MatrixMultiply
@@ -41,7 +41,6 @@ class MatrixMultiply
 
         void InitVars()
         {
-            thread_iterator = 0;
             threads = new pthread_t[num_threads];
             matrix1 = new double[SIZE];
             matrix2 = new double[SIZE];
@@ -86,6 +85,7 @@ class MatrixMultiply
 
         ~MatrixMultiply()
         {
+            delete[] threads;
             delete[] matrix1;
             delete[] matrix2;
             delete[] output;
@@ -122,9 +122,10 @@ class MatrixMultiply
 
             gettimeofday(&start, NULL);
 
+            
             for (int i = 0; i < num_threads; i++) { 
-                void* threadpointer; 
-                pthread_create(&threads[i], NULL, Multiply, threadpointer); 
+                long int thread_num = i;
+                pthread_create(&threads[i], NULL, Multiply, (void*)thread_num); 
             }
 
             for (int i = 0; i < num_threads; i++)  
@@ -142,7 +143,6 @@ int main(int argc,char* argv[])
     //input number of threads as command line argument
     num_threads = atoi(argv[1]);
     MatrixMultiply matrices;
-    //matrices.PrintResult();
     cout << "run time: " << runtime << endl;
     return 0;
 }
