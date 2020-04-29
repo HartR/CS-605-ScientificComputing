@@ -20,8 +20,8 @@ double RandomFunction ()
 }
 
 //function that returns number of points within a unit circle
-int CheckInCircle (int thread_iterations){
-	int in_circle_count = 0;
+long CheckInCircle (long thread_iterations){
+	long in_circle_count = 0;
 	double x_coordinate, y_coordinate;
 	for (int i = 0; i < thread_iterations; i++) {
 	  x_coordinate = RandomFunction();
@@ -37,10 +37,10 @@ int main(int argc, char* argv[])
 {
   //get input, first argument is # of threads, second is amount of times we want to calculate
   int number_of_threads =  atoi(argv[1]);
-  int iterations = atoi(argv[2]);
+  long iterations = atoi(argv[2]);
 
   //initialize vars
-  int iterations_per_thread, number_of_hits = 0;
+  long iterations_per_thread, number_of_hits = 0;
   double pi_estimate;
   struct timeval start, end;
 
@@ -63,6 +63,7 @@ int main(int argc, char* argv[])
 
   //need to cast iterations to double to prevent truncation
   pi_estimate = 4 * number_of_hits / (double) iterations;
+  cout << "Number of iterations: " << iterations << endl;
   cout << "Runtime :" << runtime << endl;
   cout << "Number of threads: " << number_of_threads << endl;
   cout << "Estimate of pi: " << pi_estimate << endl << endl;

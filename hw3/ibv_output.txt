@@ -1,0 +1,11 @@
+819200 bytes in 0.00 seconds = 8726.50 Mbit/sec
+100 iters in 0.00 seconds = 7.51 usec/iter
+
+8192000 bytes in 0.01 seconds = 9450.04 Mbit/sec
+1000 iters in 0.01 seconds = 6.93 usec/iter
+
+81920000 bytes in 0.07 seconds = 10072.85 Mbit/sec
+10000 iters in 0.07 seconds = 6.51 usec/iter
+:w
+819200000 bytes in 0.61 seconds = 10702.20 Mbit/sec
+100000 iters in 0.61 seconds = 6.12 usec/iter

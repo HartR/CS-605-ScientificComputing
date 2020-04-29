@@ -1,0 +1,20 @@
+#!/bin/sh
+
+#the walltime directive in the slides for class 9 gives an error
+#PBS -l nodes=1:ppn=16:core16
+#PBS -N hw1
+#PBS -j oe
+#PBS -e /home/605/russell/hw2/error.txt
+#PBS -o /home/605/russell/hw2/output.txt
+./hw2/binary 1 100
+./hw2/binary 1 1000
+./hw2/binary 1 10000
+./hw2/binary 1 100000
+./hw2/binary 1 1000000
+./hw2/binary 1 10000000
+./hw2/binary 1 100000000
+./hw2/binary 2 100000000
+./hw2/binary 4 100000000
+./hw2/binary 8 100000000
+./hw2/binary 16 100000000
+

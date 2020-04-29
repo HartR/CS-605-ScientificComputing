@@ -1,0 +1,4 @@
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+This message comes from the master, num_iterations is: 1, msg_size is 100
+1 ping-pongs in 4.88758e-05 seconds,  for an average message time of 2.44379e-07
