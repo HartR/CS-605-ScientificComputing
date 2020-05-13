@@ -141,7 +141,7 @@ int main()
         cout << "Converting " << images[i] << endl;
         //use opencv to find the picture and create empty image of the same size
         #ifdef __linux__ 
-            string image_path = getcwd() + images[i] + ".jpg";
+            string image_path = "/home/605/russell/Github/hw4/grayImageCuda/grayImageCuda/" + images[i] + ".jpg";
         #elif _WIN32
             string image_path = samples::findFile(images[i] + ".jpg");
         #endif
