@@ -6,9 +6,6 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 #include <iostream>
-#ifdef __linux__ 
-#include <unistd.h>
-#endif
 
 using namespace cv;
 using namespace std;
@@ -138,7 +135,7 @@ int main()
     string images[3] = { "outside-small", "outside-medium", "outside-large"};
     for (int i = 0; i < 3; i++)
     {
-        cout << "Converting " << images[i] << endl;
+        cout << endl << "Converting " << images[i] << endl;
         //use opencv to find the picture and create empty image of the same size
         #ifdef __linux__ 
             string image_path = "/home/605/russell/Github/hw4/grayImageCuda/grayImageCuda/" + images[i] + ".jpg";
@@ -169,7 +166,6 @@ int main()
             fprintf(stderr, "cudaDeviceReset failed!");
             return 1;
         }
-        cout << endl;
     }
 
     return 0;
