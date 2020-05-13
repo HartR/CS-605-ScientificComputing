@@ -2,6 +2,7 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 #include <stdio.h>
+#include <filesystem>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc.hpp>
@@ -137,7 +138,11 @@ int main()
     {
         cout << "Converting " << images[i] << endl;
         //use opencv to find the picture and create empty image of the same size
-        string image_path = samples::findFile(images[i] + ".jpg");
+        #ifdef __linux__ 
+            string image_path = filesystem::current_path() + images[i] + ".jpg";
+        #elif _WIN32
+            string image_path = samples::findFile(images[i] + ".jpg");
+        #endif
         Mat color_img = imread(image_path, IMREAD_COLOR);
         int rows = color_img.rows;
         int cols = color_img.cols;
