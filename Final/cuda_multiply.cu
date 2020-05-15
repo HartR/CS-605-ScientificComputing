@@ -16,7 +16,7 @@ void call_me_maybe()
 {
      cudaError_t cudaStatus;
      /* ... Load CPU data into GPU buffers  */
-     double* mat_a_device
+     double* mat_a_device;
      double* mat_b_device;
      double* mat_a, mat_b;
      int array_length = 1;
