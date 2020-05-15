@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "mpi.h"
 #include "mycuda.h"
+#include <stdlib.h>
 
 
 #define N 2
