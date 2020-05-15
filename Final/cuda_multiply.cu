@@ -11,37 +11,34 @@
           fprintf("Hello from block %d, thread %d\n", blockIdx.x, threadIdx.x);
  }
  
-void FreeMemory(double* mat_a_device, double* mat_b_device)
-{
-     cudaFree(mat_a_device);
-     cudaFree(mat_b_device);
-}
 
-void call_me_maybe(size_t a_size, size_t b_size, double* mat_a, double* mat_b)
+void call_me_maybe()
 {
      cudaError_t cudaStatus;
      /* ... Load CPU data into GPU buffers  */
-     double* mat_a_device;
-     double* mat_b_device;
+     double* mat_a_device, mat_b_device;
+     double* mat_a, mat_b;
+     int array_lenth = 1;
      //need to allocate result matrix
-     cudaMalloc((void**)&mat_a_device, a_size);
-     cudaMalloc((void**)&mat_b_device, b_size);
-     cudaMemcpy(&mat_a_device, &mat_a, a_size, cudaMemcpyHostToDevice);
-     cudaMemcpy(&mat_b_device, &mat_b, b_size, cudaMemcpyHostToDevice);
+     cudaMalloc((void**)&mat_a_device, array_length*sizeof(double));
+     cudaMalloc((void**)&mat_b_device, array_length*sizeof(double));
+     cudaMemcpy(mat_a_device, &mat_a, array_length*sizeof(double), cudaMemcpyHostToDevice);
+     cudaMemcpy(mat_b_device, &mat_b, array_length*sizeof(double), cudaMemcpyHostToDevice);
      __multiply__ <<<5, 5>>> (mat_a_device, mat_b_device);
 
 
      cudaStatus = cudaGetLastError();
      if (cudaStatus != cudaSuccess) {
           fprintf(stderr, "addKernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
-          FreeMemory(mat_a_device, mat_b_device);
      }
 
      cudaStatus = cudaDeviceSynchronize();
      if (cudaStatus != cudaSuccess) {
           fprintf(stderr, "cudaDeviceSynchronize returned error code %d after launching addKernel!\n", cudaStatus);
-          FreeMemory(mat_a_device, mat_b_device);
      }
+
+     cudaFree(mat_a_device);
+     cudaFree(mat_b_device);
 
      cudaStatus = cudaDeviceReset();
      if (cudaStatus != cudaSuccess) {
