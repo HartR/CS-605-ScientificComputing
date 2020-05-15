@@ -1,15 +1,14 @@
 #!/bin/sh
 
-#PBS -l nodes=2:ppn=16:core16:mpi
+#PBS -l nodes=node10:ppn=16+node11:ppn=16
 #PBS -N final.binary
 #PBS -j oe
 #PBS -e /home/605/russell/Final/error.txt
 #PBS -o /home/605/russell/Final/output.txt
 
 # Batch commands
-NCORES=`wc -w < $PBS_NODEFILE`
 HOST=`hostname`
 
 echo "batch.hw3: Started on $HOST"
 
-mpirun -np 2 -hostfile $PBS_NODEFILE ./Final/final.binary 100 4096
+mpirun -np 2 -hostfile $PBS_NODEFILE ./Final/final.binary
