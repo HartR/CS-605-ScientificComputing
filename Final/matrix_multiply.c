@@ -25,7 +25,7 @@ double* matrix1;
 double* matrix2;
 size_t mat_1_size = 5*sizeof(double);
 size_t mat_2_size = 5*sizeof(double);
-//call_me_maybe(20, mat_1_size, mat_2_size, matrix1, matrix2);
+call_me_maybe(20, mat_1_size, mat_2_size, matrix1, matrix2);
   MPI_Status status;
   int me,p;
   int i,j,k;
