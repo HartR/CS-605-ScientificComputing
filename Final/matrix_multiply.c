@@ -24,7 +24,7 @@ void PopulateMatrix(double* matrix)
 {
         for (int j = 0; j < SIZE; j++)
         {
-            matrix1[j] = ((double)rand() / (RAND_MAX));
+            matrix[j] = ((double)rand() / (RAND_MAX));
         }
 }
 
