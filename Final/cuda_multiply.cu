@@ -8,7 +8,7 @@
  
  __global__ void __multiply__ (double* a, double* b)
  {
-          fprintf("Hello from block %d, thread %d\n", blockIdx.x, threadIdx.x);
+          printf("Hello from block %d, thread %d\n", blockIdx.x, threadIdx.x);
  }
  
 
@@ -18,7 +18,7 @@ void call_me_maybe()
      /* ... Load CPU data into GPU buffers  */
      double* mat_a_device, mat_b_device;
      double* mat_a, mat_b;
-     int array_lenth = 1;
+     int array_length = 1;
      //need to allocate result matrix
      cudaMalloc((void**)&mat_a_device, array_length*sizeof(double));
      cudaMalloc((void**)&mat_b_device, array_length*sizeof(double));
