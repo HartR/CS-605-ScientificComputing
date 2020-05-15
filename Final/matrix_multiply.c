@@ -4,32 +4,42 @@
 #include <stdlib.h>
 
 
-#define N 2
+#define DIMENSION 2
+#define SIZE DIMENSION * DIMENSION
 
 /* global */
-int a[N][N] = {
+int a[DIMENSION][DIMENSION] = {
     { 1, 2 },
     { 3, 4 }
 };
 
-int b[N][N] = {
+int b[DIMENSION][DIMENSION] = {
     { 5, 6 },
     { 7, 8 }
 };
 
-int c[N][N];
+int c[DIMENSION][DIMENSION];
 
+void PopulateMatrix(double* matrix)
+{
+        for (int j = 0; j < SIZE; j++)
+        {
+            matrix1[j] = ((double)rand() / (RAND_MAX));
+        }
+}
 
 int main(int argc, char *argv[])
 {
     
-    size_t mat_1_size = N*N*sizeof(double);
-    size_t mat_2_size = N*N*sizeof(double);
-    double* matrix1 = (double *) malloc(sizeof(mat_1_size));
-    double* matrix2 = (double *) malloc(sizeof(mat_2_size));
+    size_t mat_a_size = DIMENSION*DIMENSION*sizeof(double);
+    size_t mat_b_size = DIMENSION*DIMENSION*sizeof(double);
+    double* matrix_a = (double *) malloc(sizeof(mat_a_size));
+    double* matrix_b = (double *) malloc(sizeof(mat_b_size));
+    PopulateMatrix(matrix_a);
+    PopulateMatrix(matrix_b);
 
 
-    call_me_maybe(matrix1, matrix2, N*N);
+    call_me_maybe(matrix1, matrix2, DIMENSION*DIMENSION);
   MPI_Status status;
   int me,p;
   int i,j,k;
@@ -49,25 +59,25 @@ int main(int argc, char *argv[])
       // assume p = 2
       for (i=1; i<p; i++)
       {
-          printf("send to  %d with data from: %d and size:%d \n", i, (i)*N/p, N*N/p);
-          MPI_Send(&a[i * N / p][0], N * N / p, MPI_INT, i, 0, MPI_COMM_WORLD);
-          MPI_Send(b, N * N, MPI_INT, i, 0, MPI_COMM_WORLD);
+          printf("send to  %d with data from: %d and size:%d \n", i, (i)*DIMENSION/p, DIMENSION*DIMENSION/p);
+          MPI_Send(&a[i * DIMENSION / p][0], DIMENSION * DIMENSION / p, MPI_INT, i, 0, MPI_COMM_WORLD);
+          MPI_Send(b, DIMENSION * DIMENSION, MPI_INT, i, 0, MPI_COMM_WORLD);
       }
   }
   else
   {
-      printf("Recv from %d with data from: %d and size:%d \n", 0, (me)*N/p, N*N/p);
-      MPI_Recv(&a[me * N / p][0], N * N / p, MPI_INT, i, 0, MPI_COMM_WORLD, 0);
-      MPI_Recv(b, N * N, MPI_INT, i, 0, MPI_COMM_WORLD, 0);
+      printf("Recv from %d with data from: %d and size:%d \n", 0, (me)*DIMENSION/p, DIMENSION*DIMENSION/p);
+      MPI_Recv(&a[me * DIMENSION / p][0], DIMENSION * DIMENSION / p, MPI_INT, i, 0, MPI_COMM_WORLD, 0);
+      MPI_Recv(b, DIMENSION * DIMENSION, MPI_INT, i, 0, MPI_COMM_WORLD, 0);
 
   }
   /* Computation */
-  for(i=me * N / p; i<(me+1) * N/p; ++i)
+  for(i=me * DIMENSION / p; i<(me+1) * DIMENSION/p; ++i)
   {
-      for (j=0; j < N; j++)
+      for (j=0; j < DIMENSION; j++)
       {
           c[i][j] = 0;
-          for (k=0; k<N; k++)
+          for (k=0; k<DIMENSION; k++)
           {
               c[i][j] += a[i][k] * b[k][j];
           }
@@ -77,13 +87,13 @@ int main(int argc, char *argv[])
   /* Result gathering */
   if (me != 0 )
   {
-      MPI_Send(&c[(me) * N/p][0], N*N/p, MPI_INT, 0, 0, MPI_COMM_WORLD);
+      MPI_Send(&c[(me) * DIMENSION/p][0], DIMENSION*DIMENSION/p, MPI_INT, 0, 0, MPI_COMM_WORLD);
   }
   else
   {
       for (i=1; i<p; i++)
       {
-          MPI_Recv(&c[i * N/p][0], N * N / p, MPI_INT, i, 0, MPI_COMM_WORLD, 0);
+          MPI_Recv(&c[i * DIMENSION/p][0], DIMENSION * DIMENSION / p, MPI_INT, i, 0, MPI_COMM_WORLD, 0);
       }
   }
 
@@ -93,9 +103,9 @@ int main(int argc, char *argv[])
   /* print the matrix */
   if (me == 0)
   {
-      for (i=0; i<N; i++) {
+      for (i=0; i<DIMENSION; i++) {
           printf("\n\t| ");
-          for (j=0; j<N; j++)
+          for (j=0; j<DIMENSION; j++)
               printf("%2d ", c[i][j]);
           printf("|");
       }
