@@ -5,6 +5,7 @@
 
 
 #define N 2
+#define SIZE N*N
 
 /* global */
 int a[N][N] = {
@@ -23,13 +24,11 @@ int c[N][N];
 int main(int argc, char *argv[])
 {
     
-    size_t mat_1_size = N*N*sizeof(double);
-    size_t mat_2_size = N*N*sizeof(double);
-    double* matrix1 = (double *) malloc(sizeof(mat_1_size));
-    double* matrix2 = (double *) malloc(sizeof(mat_2_size));
+    double* matrix1 = new double[SIZE];
+    double* matrix2 = new double[SIZE];
 
 
-    call_me_maybe(matrix1, matrix2, N*N);
+    call_me_maybe(matrix1, matrix2, SIZE);
   MPI_Status status;
   int me,p;
   int i,j,k;
