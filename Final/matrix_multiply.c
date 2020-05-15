@@ -22,13 +22,12 @@ int c[N][N];
 
 int main(int argc, char *argv[])
 {
-    double* matrix1;
-    matrix1 = malloc(N*N*sizeof(double));
-    double* matrix2;
-    matrix2 = malloc(N*N*sizeof(double));
-
     size_t mat_1_size = N*N*sizeof(double);
     size_t mat_2_size = N*N*sizeof(double);
+    double* matrix1 = (double *) malloc(sizeof(mat_1_size));
+    double* matrix2 = (double *) malloc(sizeof(mat_2_size));
+
+
     call_me_maybe(mat_1_size, mat_2_size, matrix1, matrix2);
   MPI_Status status;
   int me,p;
