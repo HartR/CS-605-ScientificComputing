@@ -7,6 +7,10 @@
 #for hw4
 *-greyscale*
 
+#for Final
+*.binary
+oldoutput.txt
+
 # User-specific files
 *.rsuser
 *.suo
