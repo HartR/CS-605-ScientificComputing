@@ -4,8 +4,7 @@
 #include <stdlib.h>
 
 
-#define DIMENSION 3200
-#define SIZE DIMENSION * DIMENSION
+#define N 2
 
 /* global */
 int a[N][N] = {
