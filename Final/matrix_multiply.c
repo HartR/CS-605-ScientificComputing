@@ -21,8 +21,8 @@ int c[N][N];
 
 int main(int argc, char *argv[])
 {
-double* matrix1 = double[5];
-double* matrix2 = double[5];
+double* matrix1 = {1, 2, 3, 4, 5};
+double* matrix2 = {1, 2, 3, 4, 5};
 size_t mat_1_size = 5*sizeof(double);
 size_t mat_2_size = 5*sizeof(double);
 call_me_maybe(20, mat_1_size, mat_2_size, matrix1, matrix2);
