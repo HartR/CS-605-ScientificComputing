@@ -16,6 +16,7 @@ void FreeMemory(double* mat_a_device, double* mat_b_device)
      cudaFree(mat_a_device);
      cudaFree(mat_b_device);
 }
+
 void call_me_maybe(size_t a_size, size_t b_size, double* mat_a, double* mat_b)
 {
      cudaError_t cudaStatus;
@@ -30,20 +31,10 @@ void call_me_maybe(size_t a_size, size_t b_size, double* mat_a, double* mat_b)
      __multiply__ <<<5, 5>>> (mat_a_device, mat_b_device);
 
 
-     cudaStatus = cudaGetLastError();
-     if (cudaStatus != cudaSuccess) {
-          fprintf(stderr, "addKernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
-          FreeMemory(mat_a_device, mat_b_device);
-     }
+     cudaGetLastError();
 
-     cudaStatus = cudaDeviceSynchronize();
-     if (cudaStatus != cudaSuccess) {
-          fprintf(stderr, "cudaDeviceSynchronize returned error code %d after launching addKernel!\n", cudaStatus);
-          FreeMemory(mat_a_device, mat_b_device);
-     }
+     cudaDeviceSynchronize();
 
-     cudaStatus = cudaDeviceReset();
-     if (cudaStatus != cudaSuccess) {
-          fprintf(stderr, "cudaDeviceReset failed!");
-     }     /* ... Transfer data from GPU to CPU */
+     FreeMemory(mat_a_device, mat_b_device);
+     cudaDeviceReset();    /* ... Transfer data from GPU to CPU */
 }
