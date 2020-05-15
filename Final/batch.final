@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #the walltime directive in the slides for class 9 gives an error
-#PBS -l nodes=2:ppn=16:core16
+#PBS -l nodes=2:ppn=16:gpus=2:core16:mpi
 #PBS -N final.binary
 #PBS -j oe
 #PBS -e /home/605/russell/Final/error.txt
