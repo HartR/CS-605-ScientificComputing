@@ -12,14 +12,12 @@
  }
  
 
-void call_me_maybe()
+void call_me_maybe(double* mat_a, double* mat_b, int array_length)
 {
      cudaError_t cudaStatus;
      /* ... Load CPU data into GPU buffers  */
      double* mat_a_device;
      double* mat_b_device;
-     double* mat_a, mat_b;
-     int array_length = 1;
      //need to allocate result matrix
      cudaMalloc((void**)&mat_a_device, array_length*sizeof(double));
      cudaMalloc((void**)&mat_b_device, array_length*sizeof(double));
