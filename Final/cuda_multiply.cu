@@ -12,7 +12,7 @@
  }
  
 
-void call_me_maybe(double* mat_a, double* mat_b, int array_length)
+void MatrixMultiplyCuda(double* mat_a, double* mat_b, int array_length)
 {
      cudaError_t cudaStatus;
      /* ... Load CPU data into GPU buffers  */

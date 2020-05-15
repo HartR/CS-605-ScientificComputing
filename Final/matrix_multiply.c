@@ -20,6 +20,14 @@ int b[N][N] = {
 
 int c[N][N];
 
+void PopulateMatrices(double* matrix)
+{
+    for (int j = 0; j < SIZE; j++)
+    {
+        matrix[j] = ((double)rand() / (RAND_MAX));
+    }
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -28,7 +36,7 @@ int main(int argc, char *argv[])
     double* matrix2 = new double[SIZE];
 
 
-    call_me_maybe(matrix1, matrix2, SIZE);
+    MatrixMultiplyCuda(matrix1, matrix2, SIZE);
   MPI_Status status;
   int me,p;
   int i,j,k;
