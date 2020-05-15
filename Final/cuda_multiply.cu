@@ -2,9 +2,11 @@
 #include <cuda.h>
 #include <cuda_runtime.h>
 #include "mycuda.h"
+#include <stdio.h>
  
  __global__ void __multiply__ (double* a, double* b)
  {
+          printf("Hello from block %d, thread %d\n", blockIdx.x, threadIdx.x);
  }
  
 void call_me_maybe(int blocksize, size_t a_size, size_t b_size, double* mat_a, double* mat_b)
