@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     PopulateMatrix(matrix_b);
 
 
-    call_me_maybe(matrix1, matrix2, DIMENSION*DIMENSION);
+    call_me_maybe(matrix_a, matrix_b, DIMENSION*DIMENSION);
   MPI_Status status;
   int me,p;
   int i,j,k;
