@@ -1,7 +1,9 @@
 /* multiply.cu */
 #include <cuda.h>
-#include <cuda_runtime.h>
 #include "mycuda.h"
+#include <stdio.h>
+#include "cuda_runtime.h"
+#include "device_launch_parameters.h"
 #include <stdio.h>
  
  __global__ void __multiply__ (double* a, double* b)
