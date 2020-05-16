@@ -12,7 +12,7 @@ using namespace std;
  __global__ void __multiply__ (double* a, double* b, double* result)
  {
      int pixel = blockIdx.x * blockDim.x + threadIdx.x;
-     //printf("Value at %d: %f, ", pixel, a[pixel]);
+     printf("\nIn matrix b: value at %d: %f, ", pixel, b[pixel]);
      result[pixel] = b[pixel];
 
  }
@@ -50,7 +50,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ar
      {
           block_number = array_length/thread_number;
      }
-     //need to allocate result matrix
+
      cudaMalloc((void**)&mat_a_device, matrix_size);
      cudaMalloc((void**)&mat_b_device, matrix_size);
      cudaMalloc((void**)&mat_result_device, matrix_size);
