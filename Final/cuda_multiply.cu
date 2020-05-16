@@ -4,8 +4,7 @@
 #include <stdio.h>
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
-#include <stdio.h>
-#include <stdlib.h>
+
 
  
 using namespace std;
@@ -19,12 +18,12 @@ using namespace std;
 
  void PrintMatrix(double* matrix)
 {
-     cout << endl << "in cuda " << endl;
+     printf("\nPrinting in CUDA\n");
     for (int row = 0; row < N; row++)
     {
         for (int column = 0; column < N; column++)
-            cout << matrix[N * row + column] << " ";
-        cout << endl;
+            printf("%f ", matrix[N * row + column]);
+        printf("\n");
     }  
 }
  
