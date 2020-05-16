@@ -56,7 +56,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ar
      cudaMalloc((void**)&mat_result_device, matrix_size);
      cudaMemcpy(mat_a_device, mat_a, matrix_size, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_b_device, mat_b, matrix_size, cudaMemcpyHostToDevice);
-     __multiply__ <<<block_number, thread_number>>> (mat_a_device, mat_b_device, mat_result_device);
+     __multiply__ <<<5, 5>>> (mat_a_device, mat_b_device, mat_result_device);
      cudaMemcpy(mat_result, mat_result_device, matrix_size, cudaMemcpyDeviceToHost);
 
 
