@@ -6,16 +6,30 @@
 #include "device_launch_parameters.h"
 #include <stdio.h>
  
+using namespace std;
+
  __global__ void __multiply__ (double* a, double* b)
  {
      int pixel = blockIdx.x * blockDim.x + threadIdx.x;
      printf("Value at %d: %f, ", pixel, a[pixel]);
 
  }
+
+ void PrintMatrix(double* matrix)
+{
+     cout << endl << "in cuda " << endl;
+    for (int row = 0; row < N; row++)
+    {
+        for (int column = 0; column < N; column++)
+            cout << matrix[N * row + column] << " ";
+        cout << endl;
+    }  
+}
  
 
 void MatrixMultiplyCuda(double* mat_a, double* mat_b, int array_length)
 {
+     PrintMatrix(mat_a);
      cudaError_t cudaStatus;
      /* ... Load CPU data into GPU buffers  */
      double* mat_a_device;
