@@ -38,9 +38,8 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, int array_length)
      //need to allocate result matrix
      cudaMalloc((void**)&mat_a_device, array_length*sizeof(double));
      cudaMalloc((void**)&mat_b_device, array_length*sizeof(double));
-     cudaMemcpy(mat_a_device, &mat_a, array_length*sizeof(double), cudaMemcpyHostToDevice);
-     cudaMemcpy(mat_b_device, &mat_b, array_length*sizeof(double), cudaMemcpyHostToDevice);
-     PrintMatrix(mat_a_device, array_length);
+     cudaMemcpy(mat_a_device, mat_a, array_length*sizeof(double), cudaMemcpyHostToDevice);
+     cudaMemcpy(mat_b_device, mat_b, array_length*sizeof(double), cudaMemcpyHostToDevice);
 
      __multiply__ <<<2, 2>>> (mat_a_device, mat_b_device);
 
