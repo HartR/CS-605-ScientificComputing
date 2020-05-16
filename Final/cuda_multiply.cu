@@ -13,6 +13,7 @@ using namespace std;
  {
      int pixel = blockIdx.x * blockDim.x + threadIdx.x;
      printf("Value at %d: %f, ", pixel, a[pixel]);
+     b[pixel] = 0;
 
  }
 

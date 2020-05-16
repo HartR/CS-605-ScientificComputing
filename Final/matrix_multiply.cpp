@@ -24,7 +24,7 @@ void PopulateMatrices(double* matrix_a, double* matrix_b)
 
 void PrintMatrix(double* matrix, string message)
 {
-    cout << message << endl;
+    cout << endl << message << endl;
     for (int row = 0; row < N; row++)
     {
         for (int column = 0; column < N; column++)
@@ -44,8 +44,8 @@ int main(int argc, char *argv[])
 
 
     MPI_Status status;
-    int current_node,p;
-    int i,j,k;
+    int current_node;
+    //int i,j,k;
 
 
     /* Start up MPI */
@@ -53,7 +53,6 @@ int main(int argc, char *argv[])
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &current_node);
     //MPI_Comm_size(MPI_COMM_WORLD, &p);
-    MatrixMultiplyCuda(matrix_a, matrix_b, SIZE, p);
 
     //printf("me=%d, p=%d", me, p);
 
@@ -62,7 +61,7 @@ int main(int argc, char *argv[])
     if (current_node == 0) // master
     {
         MPI_Send(matrix_a, SIZE, MPI_DOUBLE, 1, 0, MPI_COMM_WORLD);
-        MPI_Send(matrix_a, SIZE, MPI_DOUBLE, 1, 0, MPI_COMM_WORLD);
+        MPI_Send(matrix_b, SIZE, MPI_DOUBLE, 1, 0, MPI_COMM_WORLD);
 
         /*
         // assume p = 2
@@ -77,7 +76,9 @@ int main(int argc, char *argv[])
     else if (current_node = 1) // second node
     {
         MPI_Recv(matrix_a, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, 0);
-        MPI_Recv(matrix_a, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, 0);
+        MPI_Recv(matrix_b, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, 0);
+        MatrixMultiplyCuda(matrix_a, matrix_b, SIZE, p);
+        MPI_Send(matrix_b, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
 
 
         /*
@@ -87,6 +88,20 @@ int main(int argc, char *argv[])
         */
 
     }
+
+    if (current_node == 0) // master
+    {
+        MPI_Recv(matrix_b, SIZE, MPI_DOUBLE, 1, 0, MPI_COMM_WORLD, 0);
+    }
+    MPI_Barrier(MPI_COMM_WORLD);
+
+
+    PrintMatrix(matrix_b, "after the transfer");
+
+
+
+
+
     /* Computation */
     /*
     for(i=me * N / p; i<(me+1) * N/p; ++i)
