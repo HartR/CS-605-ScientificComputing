@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     {
         MPI_Recv(matrix_a, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, 0);
         MPI_Recv(matrix_b, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, 0);
-        MatrixMultiplyCuda(matrix_a, matrix_b, SIZE, p);
+        MatrixMultiplyCuda(matrix_a, matrix_b, SIZE, current_node);
         MPI_Send(matrix_b, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
 
 
