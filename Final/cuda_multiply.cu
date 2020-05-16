@@ -36,15 +36,16 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ar
      double* mat_a_device;
      double* mat_b_device;
      double* mat_result_device;
+     size_t matrix_size = array_length*sizeof(double);
      //need to allocate result matrix
-     cudaMalloc((void**)&mat_a_device, array_length*sizeof(double));
-     cudaMalloc((void**)&mat_b_device, array_length*sizeof(double));
-     cudaMalloc((void**)&mat_result_device, array_length*sizeof(double));
-     cudaMemcpy(mat_a_device, mat_a, array_length*sizeof(double), cudaMemcpyHostToDevice);
-     cudaMemcpy(mat_b_device, mat_b, array_length*sizeof(double), cudaMemcpyHostToDevice);
+     cudaMalloc((void**)&mat_a_device, matrix_size);
+     cudaMalloc((void**)&mat_b_device, matrix_size);
+     cudaMalloc((void**)&mat_result_device, matrix_size);
+     cudaMemcpy(mat_a_device, mat_a, matrix_size, cudaMemcpyHostToDevice);
+     cudaMemcpy(mat_b_device, mat_b, matrix_size, cudaMemcpyHostToDevice);
 
      __multiply__ <<<2, 2>>> (mat_a_device, mat_b_device, mat_result_device);
-     cudaMemcpy(mat_b, mat_b_device, array_length*sizeof(double), cudaMemcpyDeviceToHost);
+     cudaMemcpy(mat_b, mat_b_device, matrix_size, cudaMemcpyDeviceToHost);
 
 
      cudaStatus = cudaGetLastError();

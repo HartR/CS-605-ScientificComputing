@@ -4,8 +4,8 @@
 #include <stdlib.h>
 
 
-#define N 2
-#define SIZE N*N
+#define DIMENSION 5
+#define SIZE DIMENSION*DIMENSION
 
 using namespace std;
 
@@ -25,10 +25,10 @@ void PopulateMatrices(double* matrix_a, double* matrix_b)
 void PrintMatrix(double* matrix, string message)
 {
     cout << endl << message << endl;
-    for (int row = 0; row < N; row++)
+    for (int row = 0; row < DIMENSION; row++)
     {
-        for (int column = 0; column < N; column++)
-            cout << matrix[N * row + column] << " ";
+        for (int column = 0; column < DIMENSION; column++)
+            cout << matrix[DIMENSION * row + column] << " ";
         cout << endl;
     }  
 }
