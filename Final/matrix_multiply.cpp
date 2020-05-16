@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
         
 
     PopulateMatrices(matrix_a, matrix_b);
-    PrintMatrix(matrix_a, "matrix a before");
+    PrintMatrix(matrix_result, "matrix result before");
     PrintMatrix(matrix_b, "matrix b before");
 
 
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 
     if (current_node == 0) // master
     {
-        MPI_Recv(matrix_b, SIZE, MPI_DOUBLE, 1, 0, MPI_COMM_WORLD, 0);
+        MPI_Recv(matrix_result, SIZE, MPI_DOUBLE, 1, 0, MPI_COMM_WORLD, 0);
     }
     MPI_Barrier(MPI_COMM_WORLD);
 
