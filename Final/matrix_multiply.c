@@ -7,6 +7,8 @@
 #define N 2
 #define SIZE N*N
 
+using namespace std;
+
 /* global */
 int a[N][N] = {
     { 1, 2 },
@@ -48,7 +50,7 @@ int main(int argc, char *argv[])
     PopulateMatrices(matrix_a, matrix_b);
 
 
-    MatrixMultiplyCuda(matrix1, matrix_b, SIZE);
+    MatrixMultiplyCuda(matrix_a, matrix_b, SIZE);
   MPI_Status status;
   int me,p;
   int i,j,k;
