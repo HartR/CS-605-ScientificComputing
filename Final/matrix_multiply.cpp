@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     /* Data distribution */
     if (current_node == 0) // master
     {
-        MPI_Send(matrix_a, SIZE, MPI_DOUBLE, 1, mpi_tag_unused, MPI_COMM_WORLD);
+        MPI_Send(matrix_a, SIZE, MPI_DOUBLE, 1, 0, MPI_COMM_WORLD);
         /*
         // assume p = 2
         for (i=1; i<p; i++)
@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
     }
     else if (current_node = 1) // second node
     {
-        MPI_Recv(matrix_a, SIZE, MPI_DOUBLE, 0, mpi_tag_unused, MPI_COMM_WORLD, 0);
+        MPI_Recv(matrix_a, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, 0);
 
         /*
         printf("Recv from %d with data from: %d and size:%d \n", 0, (me)*N/p, N*N/p);
