@@ -42,6 +42,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, int array_length, int p)
      cudaMemcpy(mat_b_device, mat_b, array_length*sizeof(double), cudaMemcpyHostToDevice);
 
      __multiply__ <<<2, 2>>> (mat_a_device, mat_b_device);
+     cudaMemcpy(mat_b, mat_b_device, array_length*sizeof(double), cudaMemcpyDeviceToHost);
 
 
      cudaStatus = cudaGetLastError();
