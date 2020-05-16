@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
     double* matrix_a = new double[SIZE];
     double* matrix_b = new double[SIZE];
     PopulateMatrices(matrix_a, matrix_b);
+    PrintMatrix(matrix_a);
 
 
     MatrixMultiplyCuda(matrix_a, matrix_b, SIZE);
