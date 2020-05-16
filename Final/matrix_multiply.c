@@ -20,23 +20,35 @@ int b[N][N] = {
 
 int c[N][N];
 
-void PopulateMatrices(double* matrix)
+void PopulateMatrices(double* matrix_a, double* matrix_b)
 {
     for (int j = 0; j < SIZE; j++)
     {
-        matrix[j] = ((double)rand() / (RAND_MAX));
+        matrix_a[j] = ((double)rand() / (RAND_MAX));
+        matrix_b[j] = ((double)rand() / (RAND_MAX));
     }
+}
+
+void PrintMatrix(double* matrix)
+{
+    for (int row = 0; row < N; row++)
+    {
+        for (int column = 0; column < N; column++)
+            cout << matrix[N * row + column] << " ";
+        cout << endl;
+    }  
 }
 
 
 int main(int argc, char *argv[])
 {
     
-    double* matrix1 = new double[SIZE];
-    double* matrix2 = new double[SIZE];
+    double* matrix_a = new double[SIZE];
+    double* matrix_b = new double[SIZE];
+    PopulateMatrices(matrix_a, matrix_b);
 
 
-    MatrixMultiplyCuda(matrix1, matrix2, SIZE);
+    MatrixMultiplyCuda(matrix1, matrix_b, SIZE);
   MPI_Status status;
   int me,p;
   int i,j,k;
