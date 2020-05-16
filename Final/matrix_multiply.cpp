@@ -9,18 +9,8 @@
 
 using namespace std;
 
-/* global */
-int a[N][N] = {
-    { 1, 2 },
-    { 3, 4 }
-};
-
-int b[N][N] = {
-    { 5, 6 },
-    { 7, 8 }
-};
-
-int c[N][N];
+double* matrix_a = new double[SIZE];
+double* matrix_b = new double[SIZE];
 
 void PopulateMatrices(double* matrix_a, double* matrix_b)
 {
@@ -46,30 +36,31 @@ void PrintMatrix(double* matrix, string message)
 int main(int argc, char *argv[])
 {
         
-    double* matrix_a = new double[SIZE];
-    double* matrix_b = new double[SIZE];
+
     PopulateMatrices(matrix_a, matrix_b);
     PrintMatrix(matrix_a, "matrix a before");
     PrintMatrix(matrix_b, "matrix b before");
 
 
     MPI_Status status;
-    int me,p;
+    int current_node,p;
     int i,j,k;
 
 
-/* Start up MPI */
+    /* Start up MPI */
 
     MPI_Init(&argc, &argv);
-    MPI_Comm_rank(MPI_COMM_WORLD, &me);
-    MPI_Comm_size(MPI_COMM_WORLD, &p);
+    MPI_Comm_rank(MPI_COMM_WORLD, &current_node);
+    //MPI_Comm_size(MPI_COMM_WORLD, &p);
     MatrixMultiplyCuda(matrix_a, matrix_b, SIZE, p);
 
-    printf("me=%d, p=%d", me, p);
+    //printf("me=%d, p=%d", me, p);
 
+    //because tuckoo only has 2 nodes with GPUS, programming this solution for that
     /* Data distribution */
-    if (me == 0) // master
+    if (current_node == 0) // master
     {
+        MPI_Send(matrix_a, SIZE, MPI_DOUBLE, 1, mpi_tag_unused, MPI_COMM_WORLD);
         /*
         // assume p = 2
         for (i=1; i<p; i++)
@@ -80,8 +71,10 @@ int main(int argc, char *argv[])
         }
         */
     }
-    else
+    else if (current_node = 1) // second node
     {
+        MPI_Recv(matrix_a, SIZE, MPI_DOUBLE, 0, mpi_tag_unused, MPI_COMM_WORLD, 0);
+
         /*
         printf("Recv from %d with data from: %d and size:%d \n", 0, (me)*N/p, N*N/p);
         MPI_Recv(&a[me * N / p][0], N * N / p, MPI_INT, i, 0, MPI_COMM_WORLD, 0);
@@ -90,6 +83,7 @@ int main(int argc, char *argv[])
 
     }
     /* Computation */
+    /*
     for(i=me * N / p; i<(me+1) * N/p; ++i)
     {
         for (j=0; j < N; j++)
@@ -102,7 +96,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    /* Result gathering */
+    // Result gathering 
     if (me != 0 )
     {
         MPI_Send(&c[(me) * N/p][0], N*N/p, MPI_INT, 0, 0, MPI_COMM_WORLD);
@@ -118,7 +112,7 @@ int main(int argc, char *argv[])
     MPI_Barrier(MPI_COMM_WORLD);
 
 
-    /* print the matrix */
+    // print the matrix 
     if (me == 0)
     {
         for (i=0; i<N; i++) {
@@ -128,6 +122,7 @@ int main(int argc, char *argv[])
             printf("|");
         }
     }
+    */
 
 
     /* Quit */

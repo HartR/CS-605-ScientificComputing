@@ -1,6 +1,7 @@
 #!/bin/sh
 
 #PBS -l nodes=node10:ppn=16+node11:ppn=16
+#PBS -l walltime=00:15:00
 #PBS -N final.binary
 #PBS -j oe
 #PBS -e /home/605/russell/Final/error.txt
@@ -9,6 +10,6 @@
 # Batch commands
 HOST=`hostname`
 
-echo "batch.hw3: Started on $HOST"
+echo "batch.final: Started on $HOST"
 
 mpirun -np 2 -hostfile $PBS_NODEFILE ./Final/final.binary
