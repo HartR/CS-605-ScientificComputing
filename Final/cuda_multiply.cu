@@ -8,7 +8,9 @@
  
  __global__ void __multiply__ (double* a, double* b)
  {
-          printf("Hello from block %d, thread %d\n", blockIdx.x, threadIdx.x);
+     int pixel = blockIdx.x * blockDim.x + threadIdx.x;
+     printf("Value at %d: %f, ", pixel, a[pixel]);
+
  }
  
 
@@ -23,7 +25,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, int array_length)
      cudaMalloc((void**)&mat_b_device, array_length*sizeof(double));
      cudaMemcpy(mat_a_device, &mat_a, array_length*sizeof(double), cudaMemcpyHostToDevice);
      cudaMemcpy(mat_b_device, &mat_b, array_length*sizeof(double), cudaMemcpyHostToDevice);
-     __multiply__ <<<5, 5>>> (mat_a_device, mat_b_device);
+     __multiply__ <<<2, 2>>> (mat_a_device, mat_b_device);
 
 
      cudaStatus = cudaGetLastError();
