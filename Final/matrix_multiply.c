@@ -48,13 +48,12 @@ int main(int argc, char *argv[])
     double* matrix_a = new double[SIZE];
     double* matrix_b = new double[SIZE];
     PopulateMatrices(matrix_a, matrix_b);
-    PrintMatrix(matrix_a);
+    //PrintMatrix(matrix_a);
 
 
-    MatrixMultiplyCuda(matrix_a, matrix_b, SIZE);
-  MPI_Status status;
-  int me,p;
-  int i,j,k;
+    MPI_Status status;
+    int me,p;
+    int i,j,k;
  
 
   /* Start up MPI */
@@ -62,6 +61,8 @@ int main(int argc, char *argv[])
   MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &me);
   MPI_Comm_size(MPI_COMM_WORLD, &p);
+
+    MatrixMultiplyCuda(matrix_a, matrix_b, SIZE);
 
   printf("me=%d, p=%d", me, p);
 
