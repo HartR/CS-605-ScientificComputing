@@ -16,7 +16,7 @@ using namespace std;
 
  }
 
- void PrintMatrix(double* matrix)
+ void PrintMatrix(double* matrix, int N)
 {
      printf("\nPrinting in CUDA\n");
     for (int row = 0; row < N; row++)
@@ -30,7 +30,7 @@ using namespace std;
 
 void MatrixMultiplyCuda(double* mat_a, double* mat_b, int array_length)
 {
-     PrintMatrix(mat_a);
+     PrintMatrix(mat_a, array_length);
      cudaError_t cudaStatus;
      /* ... Load CPU data into GPU buffers  */
      double* mat_a_device;
