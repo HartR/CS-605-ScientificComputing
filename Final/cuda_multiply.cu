@@ -16,9 +16,9 @@ using namespace std;
 
  }
 
- void PrintMatrix(double* matrix, int N)
+ void PrintMatrix(double* matrix, int N, int p)
 {
-     printf("\nPrinting in CUDA\n");
+     printf("\nPrinting in CUDA on node %d \n", p);
     for (int row = 0; row < N; row++)
     {
         for (int column = 0; column < N; column++)
@@ -28,9 +28,9 @@ using namespace std;
 }
  
 
-void MatrixMultiplyCuda(double* mat_a, double* mat_b, int array_length)
+void MatrixMultiplyCuda(double* mat_a, double* mat_b, int array_length, int p)
 {
-     PrintMatrix(mat_a, array_length);
+     PrintMatrix(mat_a, array_length, int p);
      cudaError_t cudaStatus;
      /* ... Load CPU data into GPU buffers  */
      double* mat_a_device;
