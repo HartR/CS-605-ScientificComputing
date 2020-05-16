@@ -1,6 +1,6 @@
 #ifndef HEADERFILE_H
 #define HEADERFILE_H
 
-void MatrixMultiplyCuda(double* mat_a, double* mat_b, int array_length, int p);
+void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* matrix_result, int array_length);
 
 #endif

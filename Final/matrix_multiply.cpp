@@ -62,6 +62,8 @@ int main(int argc, char *argv[])
     {
         MPI_Send(matrix_a, SIZE, MPI_DOUBLE, 1, 0, MPI_COMM_WORLD);
         MPI_Send(matrix_b, SIZE, MPI_DOUBLE, 1, 0, MPI_COMM_WORLD);
+        MPI_Send(matrix_result, SIZE, MPI_DOUBLE, 1, 0, MPI_COMM_WORLD);
+
 
         /*
         // assume p = 2
@@ -77,8 +79,10 @@ int main(int argc, char *argv[])
     {
         MPI_Recv(matrix_a, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, 0);
         MPI_Recv(matrix_b, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, 0);
-        MatrixMultiplyCuda(matrix_a, matrix_b, SIZE, current_node);
-        MPI_Send(matrix_b, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
+        MPI_Recv(matrix_result, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, 0);
+        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result, SIZE);
+        //send matrix b back to original node
+        MPI_Send(matrix_result, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
 
 
         /*

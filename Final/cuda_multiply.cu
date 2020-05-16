@@ -9,10 +9,10 @@
  
 using namespace std;
 
- __global__ void __multiply__ (double* a, double* b)
+ __global__ void __multiply__ (double* a, double* b, double* result)
  {
      int pixel = blockIdx.x * blockDim.x + threadIdx.x;
-     printf("Value at %d: %f, ", pixel, a[pixel]);
+     //printf("Value at %d: %f, ", pixel, a[pixel]);
      b[pixel] = 0;
 
  }
@@ -29,19 +29,21 @@ using namespace std;
 }
  
 
-void MatrixMultiplyCuda(double* mat_a, double* mat_b, int array_length, int p)
+void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int array_length)
 {
      cudaError_t cudaStatus;
      /* ... Load CPU data into GPU buffers  */
      double* mat_a_device;
      double* mat_b_device;
+     double* mat_result_device;
      //need to allocate result matrix
      cudaMalloc((void**)&mat_a_device, array_length*sizeof(double));
      cudaMalloc((void**)&mat_b_device, array_length*sizeof(double));
+     cudaMalloc((void**)&mat_result_device, array_length*sizeof(double));
      cudaMemcpy(mat_a_device, mat_a, array_length*sizeof(double), cudaMemcpyHostToDevice);
      cudaMemcpy(mat_b_device, mat_b, array_length*sizeof(double), cudaMemcpyHostToDevice);
 
-     __multiply__ <<<2, 2>>> (mat_a_device, mat_b_device);
+     __multiply__ <<<2, 2>>> (mat_a_device, mat_b_device, mat_result_device);
      cudaMemcpy(mat_b, mat_b_device, array_length*sizeof(double), cudaMemcpyDeviceToHost);
 
 
