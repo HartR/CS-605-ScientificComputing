@@ -30,7 +30,7 @@ using namespace std;
 
 void MatrixMultiplyCuda(double* mat_a, double* mat_b, int array_length, int p)
 {
-     PrintMatrix(mat_a, array_length, int p);
+     PrintMatrix(mat_a, array_length, p);
      cudaError_t cudaStatus;
      /* ... Load CPU data into GPU buffers  */
      double* mat_a_device;
