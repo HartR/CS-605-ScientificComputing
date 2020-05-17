@@ -92,12 +92,12 @@ int main(int argc, char *argv[])
 
     if (current_node == sender) // master
     {
-        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, m, n, k, current_node)
+        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, m, n, k, current_node);
         MPI_Recv(matrix_result_2, m*k, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
     }
     else if (current_node == receiver) // master
     {
-        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_2, m, n, k, current_node)
+        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_2, m, n, k, current_node);
         MPI_Send(matrix_result_2, m*k, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
     }
     /*
