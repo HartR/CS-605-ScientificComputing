@@ -35,6 +35,13 @@ void PrintMatrix(double* matrix, string message)
     }  
 }
 
+void PrintHalf(double* matrix)
+{
+    for (int i = 0; i < HALF; i++)
+        cout << endl << i << ": " << matrix[i] << ", ";
+    coud << endl;
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -122,18 +129,10 @@ int main(int argc, char *argv[])
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
-
+    PrintHalf(matrix_result_2);
     //copy(matrix_result_1, SIZE, matrix_result);
     //copy(matrix_result_2, SIZE, matrix_result + SIZE/2);
-    if (current_node = sender)
-    {
-        for (int i = 0; i < HALF; i++)
-        {
-            matrix_result[i] = matrix_result_1[i];
-            matrix_result[i+HALF] = matrix_result_2[2];
-        }
-    }
-    PrintMatrix(matrix_result, "final result ");
+
 
     /* Computation */
     /*
