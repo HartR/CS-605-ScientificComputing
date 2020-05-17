@@ -9,11 +9,24 @@
  
 using namespace std;
 
- __global__ void __multiply__ (double* a, double* b, double* result)
+ __global__ void __multiply__ (double* a, double* b, double* result, int id)
  {
+      
      int pixel = blockIdx.x * blockDim.x + threadIdx.x;
+     pixel += offset*id;
      printf("\nIn matrix b: value at %d: %f, ", pixel, b[pixel]);
      result[pixel] = b[pixel];
+
+     for(i=me * N / p; i<(me+1) * N/p; ++i)
+     {
+         for (j=0; j < N; j++)
+         {
+             for (k=0; k<N; k++)
+             {
+                 c[i][j] += a[i][k] * b[k][j];
+             }
+         }
+     }
 
  }
 
@@ -29,7 +42,7 @@ using namespace std;
 }
  
 
-void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int array_length)
+void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int array_length, int host_id)
 {
      cudaError_t cudaStatus;
      /* ... Load CPU data into GPU buffers  */
@@ -50,7 +63,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ar
      {
           block_number = array_length/thread_number;
      }
-
+     //thread_number*block_number == array_length/2
      cudaMalloc((void**)&mat_a_device, matrix_size);
      cudaMalloc((void**)&mat_b_device, matrix_size);
      cudaMalloc((void**)&mat_result_device, matrix_size);

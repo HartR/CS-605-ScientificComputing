@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 
-#define DIMENSION 5
+#define DIMENSION 32
 #define SIZE DIMENSION*DIMENSION
 
 using namespace std;
@@ -44,25 +44,29 @@ int main(int argc, char *argv[])
 
 
     MPI_Status status;
-    int current_node;
+    int current_node, total_nodes;
     //int i,j,k;
 
 
     /* Start up MPI */
+    const int sender = 0;
+    const int receiver = 1;
+    int tag_unused = 0;
 
+    MPI_Status status;
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &current_node);
-    //MPI_Comm_size(MPI_COMM_WORLD, &p);
+    MPI_Comm_size(MPI_COMM_WORLD, &total_nodes);
 
     //printf("me=%d, p=%d", me, p);
 
     //because tuckoo only has 2 nodes with GPUS, programming this solution for that
     /* Data distribution */
-    if (current_node == 0) // master
+    if (current_node == sender) // master
     {
-        MPI_Send(matrix_a, SIZE, MPI_DOUBLE, 1, 0, MPI_COMM_WORLD);
-        MPI_Send(matrix_b, SIZE, MPI_DOUBLE, 1, 0, MPI_COMM_WORLD);
-        MPI_Send(matrix_result, SIZE, MPI_DOUBLE, 1, 0, MPI_COMM_WORLD);
+        MPI_Send(matrix_a, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
+        MPI_Send(matrix_b, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
+        MPI_Send(matrix_result, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
 
 
         /*
@@ -75,14 +79,11 @@ int main(int argc, char *argv[])
         }
         */
     }
-    else if (current_node = 1) // second node
+    else if (current_node = receiver) // second node
     {
-        MPI_Recv(matrix_a, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, 0);
-        MPI_Recv(matrix_b, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, 0);
-        MPI_Recv(matrix_result, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, 0);
-        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result, SIZE);
-        //send matrix b back to original node
-        MPI_Send(matrix_result, SIZE, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
+        MPI_Recv(matrix_a, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
+        MPI_Recv(matrix_b, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
+        MPI_Recv(matrix_result, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
 
 
         /*
@@ -92,12 +93,18 @@ int main(int argc, char *argv[])
         */
 
     }
+    MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result, SIZE, current_node);
+
     MPI_Barrier(MPI_COMM_WORLD);
 
+    //send matrix result from node 2 back to original node
+    MPI_Send(matrix_result, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
 
-    if (current_node == 0) // master
+
+
+    if (current_node == sender) // master
     {
-        MPI_Recv(matrix_result, SIZE, MPI_DOUBLE, 1, 0, MPI_COMM_WORLD, 0);
+        MPI_Recv(matrix_result, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
     }
     MPI_Barrier(MPI_COMM_WORLD);
 
