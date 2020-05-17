@@ -2,6 +2,7 @@
 #include "mpi.h"
 #include "mycuda.h"
 #include <stdlib.h>
+#include <algorithm>
 
 
 #define DIMENSION 6
@@ -118,13 +119,13 @@ int main(int argc, char *argv[])
     }
     else if (current_node = sender) // second node
     {
-        MPI_Recv(matrix_result_2, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
+        MPI_Recv(matrix_result_2, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
 
-    std::copy(matrix_result_1, SIZE, matrix_result);
-    std::copy(matrix_result_2, SIZE, matrix_result + SIZE/2);
+    copy(matrix_result_1, SIZE, matrix_result);
+    copy(matrix_result_2, SIZE, matrix_result + SIZE/2);
 
     PrintMatrix(matrix_result);
 
