@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     {
         MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result, SIZE, current_node);
 
-        PrintMatrix(result, "hope this works?");
+        PrintMatrix(matrix_result, "hope this works?");
 
         /*
         MPI_Send(matrix_a, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
         //MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result, SIZE, current_node);
         //MPI_Send(matrix_result, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
 
-        PrintMatrix(result, "did it work?");
+        PrintMatrix(matrix_result, "did it work?");
         /*
         printf("Recv from %d with data from: %d and size:%d \n", 0, (me)*N/p, N*N/p);
         MPI_Recv(&a[me * N / p][0], N * N / p, MPI_INT, i, 0, MPI_COMM_WORLD, 0);
