@@ -72,7 +72,6 @@ int main(int argc, char *argv[])
     matrix_b = new double[matrix_b_length];
     matrix_result_1 = new double[m*k];
     matrix_result_2 = new double[m*k];
-    PopulateMatrix(matrix_a, matrix_b);
     //PrintMatrix(matrix_result, "matrix result before");
     //PrintMatrix(matrix_b, "matrix b before");
 
