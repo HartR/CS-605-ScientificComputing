@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     /* Data distribution */
     if (current_node == sender) // master
     {
-        PrintMatrix((matrix_result, "before first multiply?");
+        PrintMatrix(matrix_result, "before first multiply?");
         MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result, SIZE, current_node);
 
         PrintMatrix(matrix_result, "hope this works?");
