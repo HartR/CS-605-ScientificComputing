@@ -45,7 +45,7 @@ void PrintHalf(double* matrix)
 
 double* MergeMatrices()
 {
-    merged_matrix = new double[];
+    merged_matrix = new double[SIZE];
     for(int i = 0; i < HALF; i++)
     {
         merged_matrix[i] = matrix_result_1[i];
