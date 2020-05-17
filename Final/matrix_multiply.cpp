@@ -9,10 +9,10 @@
 
 using namespace std;
 
-double* matrix_a = new double[SIZE];
-double* matrix_b = new double[SIZE];
-double* matrix_result_1 = new double[HALF];
-double* matrix_result_2 = new double[HALF];
+double* matrix_a;
+double* matrix_b;
+double* matrix_result_1;
+double* matrix_result_2;
 //double* merged_matrix;
 
 void PopulateMatrices(double* matrix_a, double* matrix_b)
@@ -57,8 +57,17 @@ double* MergeMatrices()
 
 int main(int argc, char *argv[])
 {
-        
+    // input dimensions of input matrices: m X n matrix (A)
+    // n X k matrix (B)    
+    int m, n, k;
+    m = atoi(argv[1]);
+    n = atoi(argv[2]);
+    k = atoi(argv[3]);
 
+    matrix_a = new double[m*n];
+    matrix_b = new double[n*k];
+    matrix_result_1 = new double[m*k];
+    matrix_result_2 = new double[m*k];
     PopulateMatrices(matrix_a, matrix_b);
     //PrintMatrix(matrix_result, "matrix result before");
     //PrintMatrix(matrix_b, "matrix b before");
@@ -76,7 +85,7 @@ int main(int argc, char *argv[])
 
     /*
     MPI_Datatype offset_mpi_vector;
-    MPI_Type_vector( 2, 2, 4, MPI_DOUBLE, &offset_mpi_vector);
+    \jm hyg6]m  x6PI_Type_vector( 2, 2, 4, MPI_DOUBLE, &offset_mpi_vector);
     MPI_Type_commit(&offset_mpi_vector);
     */
 

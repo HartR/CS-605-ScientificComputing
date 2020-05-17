@@ -12,4 +12,4 @@ HOST=`hostname`
 
 echo "batch.final: Started on $HOST"
 
-mpirun -np 2 -hostfile $PBS_NODEFILE ./Final/final.binary
+mpirun -np 2 -hostfile $PBS_NODEFILE ./Final/final.binary 6 6 6
