@@ -52,7 +52,10 @@ double* MergeMatrices()
 
 int main(int argc, char *argv[])
 {
-        
+    matrix_a = new double[SIZE];
+    matrix_b = new double[SIZE];
+    matrix_result_1 = new double[HALF];
+    matrix_result_2 = new double[HALF];    
 
     PopulateMatrices();
     //PrintMatrix(matrix_result, "matrix result before");
