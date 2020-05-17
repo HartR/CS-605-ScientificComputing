@@ -18,6 +18,7 @@ using namespace std;
 
  }
 
+ /*
  void PrintMatrix(double* matrix, int N, int p)
 {
      printf("\nPrinting in CUDA on host %d \n", p);
@@ -28,7 +29,7 @@ using namespace std;
         printf("\n");
     }  
 }
- 
+ */
 
 void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int array_length, int host_id)
 {
@@ -61,7 +62,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ar
      cudaMemcpy(mat_a_device, mat_a, matrix_size, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_b_device, mat_b, matrix_size, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_result_device, mat_result, matrix_size, cudaMemcpyHostToDevice);
-     PrintMatrix(mat_result, sqrt(array_length), host_id);
+     //PrintMatrix(mat_result, sqrt(array_length), host_id);
 
      __multiply__ <<<1, thread_number>>> (mat_a_device, mat_b_device, mat_result_device, offset);
      cudaMemcpy(mat_result, mat_result_device, matrix_size, cudaMemcpyDeviceToHost);
