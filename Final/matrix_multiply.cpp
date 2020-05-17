@@ -27,15 +27,15 @@ void PopulateMatrix(double* matrix, int outer, int inner)
     }
 }
 
-void PrintMatrix(double* matrix, string message)
+void PrintMatrix(double* matrix, int outer, int inner, string message)
 {
     cout << endl << message << endl;
-    for (int row = 0; row < DIMENSION; row++)
-    {
-        for (int column = 0; column < DIMENSION; column++)
-            cout << DIMENSION * row + column << ": " << "Value:" << matrix[DIMENSION * row + column] << " | ";
+    for (int i = 0; i < outer; ++i) {
+        for (int j = 0; j < inner; ++j) {
+            cout << DIMENSION * row + column << ": " << "Value:" << matrix[i * inner + j] << " | ";
+        }
         cout << endl;
-    }  
+    } 
 }
 
 void PrintHalf(double* matrix)
@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
     /* Data distribution */
     if (current_node == sender) // master
     {
-        PrintMatrix(matrix_b, "In sender, printing mat b");
+        PrintMatrix(matrix_b, n, k, "In sender, printing mat b");
         //PrintMatrix(matrix_result, "before first multiply?");
         //MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, SIZE, current_node);
 
@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
     }
     else if (current_node = receiver) // second node
     {
-        PrintMatrix(matrix_b, "In receiver, printing mat a");
+        PrintMatrix(matrix_a, m, n, "In receiver, printing mat a");
 
         /*
         MPI_Recv(matrix_a, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
