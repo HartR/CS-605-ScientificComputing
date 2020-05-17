@@ -127,12 +127,15 @@ int main(int argc, char *argv[])
 
     //copy(matrix_result_1, SIZE, matrix_result);
     //copy(matrix_result_2, SIZE, matrix_result + SIZE/2);
-    for (int i = 0; i < HALF; i++)
+    if (current_node = receiver)
     {
-        matrix_result[i] = matrix_result_1[i];
-        matrix_result[i+HALF] = matrix_result_2[2];
+        for (int i = 0; i < HALF; i++)
+        {
+            matrix_result[i] = matrix_result_1[i];
+            matrix_result[i+HALF] = matrix_result_2[2];
+        }
+        PrintMatrix(matrix_result, "final result");
     }
-    PrintMatrix(matrix_result, "final result");
 
     /* Computation */
     /*
