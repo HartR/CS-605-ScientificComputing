@@ -13,14 +13,17 @@ double* matrix_a;
 double* matrix_b;
 double* matrix_result_1;
 double* matrix_result_2;
+int matrix_a_length;
+int matrix_b_length;
+int matrix_result_length;
 //double* merged_matrix;
 
-void PopulateMatrices(double* matrix_a, double* matrix_b)
+void PopulateMatrix(double* matrix, int outer, int inner)
 {
-    for (int j = 0; j < SIZE; j++)
-    {
-        matrix_a[j] = ((double)rand() / (RAND_MAX));
-        matrix_b[j] = ((double)rand() / (RAND_MAX));
+    for (int i = 0; i < outer; ++i) {
+        for (int j = 0; j < inner; ++j) {
+            matrix[i * inner + j] = ((double)rand() / (RAND_MAX));
+        }
     }
 }
 
@@ -63,12 +66,13 @@ int main(int argc, char *argv[])
     m = atoi(argv[1]);
     n = atoi(argv[2]);
     k = atoi(argv[3]);
-
-    matrix_a = new double[m*n];
-    matrix_b = new double[n*k];
+    matrix_a_length = m*n;
+    matrix_b_length = n*k;
+    matrix_a = new double[matrix_a_length];
+    matrix_b = new double[matrix_b_length];
     matrix_result_1 = new double[m*k];
     matrix_result_2 = new double[m*k];
-    PopulateMatrices(matrix_a, matrix_b);
+    PopulateMatrix(matrix_a, matrix_b);
     //PrintMatrix(matrix_result, "matrix result before");
     //PrintMatrix(matrix_b, "matrix b before");
 
@@ -83,25 +87,38 @@ int main(int argc, char *argv[])
     MPI_Comm_rank(MPI_COMM_WORLD, &current_node);
     MPI_Comm_size(MPI_COMM_WORLD, &total_nodes);
 
+    if (current_node == sender) // master
+    {
+        PopulateMatrix(matrix_a, m, n);
+        MPI_Send(matrix_a, matrix_a_length, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
+        MPI_Recv(matrix_b, matrix_b_length, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
+    }
+    else if (current_node == receiver) // master
+    {
+        PopulateMatrix(matrix_b, n, k);
+        MPI_Send(matrix_a, matrix_a_length, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
+        MPI_Recv(matrix_b, matrix_b_length, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
+    }
     /*
     MPI_Datatype offset_mpi_vector;
     \jm hyg6]m  x6PI_Type_vector( 2, 2, 4, MPI_DOUBLE, &offset_mpi_vector);
     MPI_Type_commit(&offset_mpi_vector);
     */
 
-
+    MPI_Barrier(MPI_COMM_WORLD);
     //printf("me=%d, p=%d", me, p);
 
     //because tuckoo only has 2 nodes with GPUS, programming this solution for that
     /* Data distribution */
     if (current_node == sender) // master
     {
+        PrintMatrix(matrix_b, "In sender, printing mat b");
         //PrintMatrix(matrix_result, "before first multiply?");
-        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, SIZE, current_node);
+        //MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, SIZE, current_node);
 
         //PrintHalf(matrix_result_1);
 
-        MPI_Recv(matrix_result_2, HALF, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
+        //MPI_Recv(matrix_result_2, HALF, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
 
         //PrintMatrix(matrix_result, "hope this works?");
 
@@ -122,18 +139,20 @@ int main(int argc, char *argv[])
     }
     else if (current_node = receiver) // second node
     {
+        PrintMatrix(matrix_b, "In receiver, printing mat a");
+
         /*
         MPI_Recv(matrix_a, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
         MPI_Recv(matrix_b, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
         MPI_Recv(matrix_result, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
                 PrintMatrix(matrix_result, "before second");*/
 
-        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_2, SIZE, current_node);
+        //MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_2, SIZE, current_node);
 
         //PrintHalf(matrix_result_2);
 
         //MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result, SIZE, current_node);
-        MPI_Send(matrix_result_2, HALF, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
+        //MPI_Send(matrix_result_2, HALF, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
 
         //PrintMatrix(matrix_result, "did it work?");
         /*
@@ -156,6 +175,7 @@ int main(int argc, char *argv[])
         MPI_Recv(matrix_result_2, HALF, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
     }*/
 
+/*
     MPI_Barrier(MPI_COMM_WORLD);
 
     if(current_node == sender)
@@ -164,7 +184,7 @@ int main(int argc, char *argv[])
 
         PrintMatrix(MergeMatrices(), "final");
         delete[] matrix_results_combined;
-    }
+    }*/
 
     //PrintMatrix(matrix_result, "did it work please");
     //PrintHalf(matrix_result_1);
