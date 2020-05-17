@@ -11,7 +11,6 @@ using namespace std;
 
 double* matrix_a = new double[SIZE];
 double* matrix_b = new double[SIZE];
-double* matrix_result = new double[SIZE];
 double* matrix_result_1 = new double[HALF];
 double* matrix_result_2 = new double[HALF];
 
@@ -41,6 +40,17 @@ void PrintHalf(double* matrix)
     for (int i = 0; i < HALF; i++)
         cout << i << ": " << matrix[i] << ", ";
     cout << endl;
+}
+
+double* MergeMatrices()
+{
+    double* merged_matrix = new double[]
+    for(int i = 0; i < HALF; i++)
+    {
+        merged_matrix[i] = matrix_result_1[i];
+        merged_matrix[i+HALF] = matrix_result_2[i];
+    }
+    return merged_matrix;
 }
 
 
@@ -135,11 +145,7 @@ int main(int argc, char *argv[])
     }*/
 
     MPI_Barrier(MPI_COMM_WORLD);
-    for(int i = 0; i < HALF; i++)
-    {
-        matrix_result[i] = matrix_result_1[i];
-        matrix_result[i+HALF] = matrix_result_2[i];
-    }
+
     PrintMatrix(matrix_result, "did it work please");
     //PrintHalf(matrix_result_1);
 
@@ -196,6 +202,8 @@ int main(int argc, char *argv[])
     MPI_Type_free(&offset_mpi_vector);
 
     MPI_Finalize();
+
+    PrintMatrix(MergeMatrices(), "final");
     return 0;
 }
 
