@@ -32,7 +32,7 @@ void PrintMatrix(double* matrix, int outer, int inner, string message)
     cout << endl << message << endl;
     for (int i = 0; i < outer; ++i) {
         for (int j = 0; j < inner; ++j) {
-            cout << DIMENSION * row + column << ": " << "Value:" << matrix[i * inner + j] << " | ";
+            cout << i * inner + j << ": " << "Value:" << matrix[i * inner + j] << " | ";
         }
         cout << endl;
     } 
