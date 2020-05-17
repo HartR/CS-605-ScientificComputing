@@ -64,15 +64,15 @@ int main(int argc, char *argv[])
     /* Data distribution */
     if (current_node == sender) // master
     {
-        PrintMatrix(matrix_result, "before first multiply?");
+        //PrintMatrix(matrix_result, "before first multiply?");
         MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result, SIZE, current_node);
 
         PrintMatrix(matrix_result, "hope this works?");
 
-        
+        /*
         MPI_Send(matrix_a, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
         MPI_Send(matrix_b, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
-        MPI_Send(matrix_result, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
+        MPI_Send(matrix_result, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);*/
 
         /*
         // assume p = 2
@@ -86,11 +86,11 @@ int main(int argc, char *argv[])
     }
     else if (current_node = receiver) // second node
     {
-        
+        /*
         MPI_Recv(matrix_a, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
         MPI_Recv(matrix_b, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
         MPI_Recv(matrix_result, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
-                PrintMatrix(matrix_result, "before second");
+                PrintMatrix(matrix_result, "before second");*/
 
         MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result, SIZE, current_node);
 
