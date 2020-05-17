@@ -15,11 +15,12 @@ using namespace std;
      pixel += offset;
      printf("\nIn matrix b, current value in result: %f, value at %d: %f, ", result[pixel], pixel, b[pixel]);
      result[pixel] = b[pixel];
+
  }
 
  void PrintMatrix(double* matrix, int N, int p)
 {
-     printf("\nPrinting in CUDA on node %d \n", p);
+     printf("\nPrinting in CUDA with offset %d \n", p);
     for (int row = 0; row < N; row++)
     {
         for (int column = 0; column < N; column++)
@@ -57,6 +58,9 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ar
      cudaMalloc((void**)&mat_result_device, matrix_size);
      cudaMemcpy(mat_a_device, mat_a, matrix_size, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_b_device, mat_b, matrix_size, cudaMemcpyHostToDevice);
+     cudaMemcpy(mat_result_device, mat_result, matrix_size, cudaMemcpyHostToDevice);
+     PrintMatrix(result, )
+
      __multiply__ <<<3, 3>>> (mat_a_device, mat_b_device, mat_result_device, offset);
      cudaMemcpy(mat_result, mat_result_device, matrix_size, cudaMemcpyDeviceToHost);
 
