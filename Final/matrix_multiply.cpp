@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 
-#define DIMENSION 32
+#define DIMENSION 6
 #define SIZE DIMENSION*DIMENSION
 
 using namespace std;
@@ -64,9 +64,9 @@ int main(int argc, char *argv[])
     /* Data distribution */
     if (current_node == sender) // master
     {
-        MPI_Send(matrix_a, SIZE, offset_mpi_vector, receiver, tag_unused, MPI_COMM_WORLD);
-        MPI_Send(matrix_b, SIZE, offset_mpi_vector, receiver, tag_unused, MPI_COMM_WORLD);
-        MPI_Send(matrix_result, SIZE, offset_mpi_vector, receiver, tag_unused, MPI_COMM_WORLD);
+        MPI_Send(matrix_a, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
+        MPI_Send(matrix_b, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
+        MPI_Send(matrix_result, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
 
 
         /*
