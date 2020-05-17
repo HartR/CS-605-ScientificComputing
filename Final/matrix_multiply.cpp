@@ -72,6 +72,10 @@ int main(int argc, char *argv[])
     matrix_b = new double[matrix_b_length];
     matrix_result_1 = new double[m*k];
     matrix_result_2 = new double[m*k];
+            PopulateMatrix(matrix_a, m, n);
+                    PopulateMatrix(matrix_b, n, k);
+
+
     //PrintMatrix(matrix_result, "matrix result before");
     //PrintMatrix(matrix_b, "matrix b before");
 
@@ -88,16 +92,12 @@ int main(int argc, char *argv[])
 
     if (current_node == sender) // master
     {
-        PopulateMatrix(matrix_a, m, n);
-        PrintMatrix(matrix_a, m, n, "In sender, printing mat a");
         matrix_a[0] = 9999;
         MPI_Send(matrix_a, matrix_a_length, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
         MPI_Recv(matrix_b, matrix_b_length, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
     }
     else if (current_node == receiver) // master
     {
-        PopulateMatrix(matrix_b, n, k);
-        PrintMatrix(matrix_b, n, k, "In receiver, printing mat b");
         matrix_b[0] = 7777;
         MPI_Send(matrix_b, matrix_b_length, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
         MPI_Recv(matrix_a, matrix_a_length, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
