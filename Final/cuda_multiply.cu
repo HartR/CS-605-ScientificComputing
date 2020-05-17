@@ -22,7 +22,7 @@ using namespace std;
              sum += a[row * n + i] * b[i * k + col];
          }
          c[row * k + col + offset] = sum;
-         printf("\n At location %d in c, assigned value %f, ", row * k + col + offset, c[row * k + col + offset]);
+         printf("\n At location %d, i is %d, in c, assigned value %f, value of a is %f, val of b is %f", row * k + col + offset, i, c[row * k + col + offset], a[i], b[i]);
 
      }
      printf("\n\n");
