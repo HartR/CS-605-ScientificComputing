@@ -45,15 +45,10 @@ int main(int argc, char *argv[])
 
     MPI_Status status;
     int current_node, total_nodes;
-    //int i,j,k;
-
-
-    /* Start up MPI */
     const int sender = 0;
     const int receiver = 1;
     int tag_unused = 0;
-
-    MPI_Status status;
+    
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &current_node);
     MPI_Comm_size(MPI_COMM_WORLD, &total_nodes);
