@@ -74,9 +74,11 @@ int main(int argc, char *argv[])
     MPI_Comm_rank(MPI_COMM_WORLD, &current_node);
     MPI_Comm_size(MPI_COMM_WORLD, &total_nodes);
 
+    /*
     MPI_Datatype offset_mpi_vector;
     MPI_Type_vector( 2, 2, 4, MPI_DOUBLE, &offset_mpi_vector);
     MPI_Type_commit(&offset_mpi_vector);
+    */
 
 
     //printf("me=%d, p=%d", me, p);
