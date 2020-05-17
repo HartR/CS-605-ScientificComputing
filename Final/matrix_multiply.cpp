@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     MPI_Comm_size(MPI_COMM_WORLD, &total_nodes);
 
     MPI_Datatype offset_mpi_vector;
-    MPI_Type_vector( DIMENSION, DIMENSION, DIMENSION, MPI_DOUBLE, &offset_mpi_vector);
+    MPI_Type_vector( 2, 2, 4, MPI_DOUBLE, &offset_mpi_vector);
     MPI_Type_commit(&offset_mpi_vector);
 
 
@@ -84,8 +84,8 @@ int main(int argc, char *argv[])
         MPI_Recv(matrix_a, SIZE, offset_mpi_vector, sender, tag_unused, MPI_COMM_WORLD, &status);
         MPI_Recv(matrix_b, SIZE, offset_mpi_vector, sender, tag_unused, MPI_COMM_WORLD, &status);
         MPI_Recv(matrix_result, SIZE, offset_mpi_vector, sender, tag_unused, MPI_COMM_WORLD, &status);
-        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result, SIZE, current_node);
-        MPI_Send(matrix_result, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
+        //MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result, SIZE, current_node);
+        //MPI_Send(matrix_result, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
 
         PrintMatrix(matrix_b, "did it work?");
         /*
@@ -104,12 +104,12 @@ int main(int argc, char *argv[])
 
     if (current_node == sender) // master
     {
-        MPI_Recv(matrix_result, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
+        //MPI_Recv(matrix_result, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
     }
     MPI_Barrier(MPI_COMM_WORLD);
 
 
-    PrintMatrix(matrix_result, "after the transfer");
+    //PrintMatrix(matrix_result, "after the transfer");
 
 
 
