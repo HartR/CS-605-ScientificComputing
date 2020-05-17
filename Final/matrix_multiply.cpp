@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     MPI_Comm_size(MPI_COMM_WORLD, &total_nodes);
 
     MPI_Datatype offset_mpi_vector;
-    MPI_Type_vector( SIZE, SIZE/2, SIZE/2, MPI_DOUBLE, &offset_mpi_vector);
+    MPI_Type_vector( DIMENSION, DIMENSION, DIMENSION, MPI_DOUBLE, &offset_mpi_vector);
     MPI_Type_commit(&offset_mpi_vector);
 
 
