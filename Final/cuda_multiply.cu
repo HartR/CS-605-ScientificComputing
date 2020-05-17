@@ -41,10 +41,11 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ar
      double* mat_b_device;
      double* mat_result_device;
      size_t matrix_size = array_length*sizeof(double);
+
+     //figure out ideal thread/block numbers
      //I'm using 256 threads, because we found that to be optimal from assignment 4
      int thread_number = 256;
      int block_number = 1;
-
      if(array_length < thread_number)
      {
           thread_number = array_length;
