@@ -12,7 +12,7 @@ using namespace std;
  __global__ void __multiply__ (double* a, double* b, double* result, int id)
  {
      int pixel = blockIdx.x * blockDim.x + threadIdx.x;
-     pixel += offset*id;
+     //pixel += offset*id;
      printf("\nIn matrix b: value at %d: %f, ", pixel, b[pixel]);
      result[pixel] = b[pixel];
  }

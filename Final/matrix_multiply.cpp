@@ -48,10 +48,14 @@ int main(int argc, char *argv[])
     const int sender = 0;
     const int receiver = 1;
     int tag_unused = 0;
-    
+
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &current_node);
     MPI_Comm_size(MPI_COMM_WORLD, &total_nodes);
+    MPI_Type_commit(&total_nodes);
+
+    MPI_Datatype offset_mpi_vector;
+    MPI_Type_vector( SIZE, SIZE/2, SIZE/2, MPI_DOUBLE, &offset_mpi_vector);
 
     //printf("me=%d, p=%d", me, p);
 
@@ -59,9 +63,9 @@ int main(int argc, char *argv[])
     /* Data distribution */
     if (current_node == sender) // master
     {
-        MPI_Send(matrix_a, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
-        MPI_Send(matrix_b, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
-        MPI_Send(matrix_result, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
+        MPI_Send(matrix_a, SIZE, offset_mpi_vector, receiver, tag_unused, MPI_COMM_WORLD);
+        MPI_Send(matrix_b, SIZE, offset_mpi_vector, receiver, tag_unused, MPI_COMM_WORLD);
+        MPI_Send(matrix_result, SIZE, offset_mpi_vector, receiver, tag_unused, MPI_COMM_WORLD);
 
 
         /*
@@ -80,7 +84,7 @@ int main(int argc, char *argv[])
         MPI_Recv(matrix_b, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
         MPI_Recv(matrix_result, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
 
-
+        PrintMatrix(matrix_b, "did it work?");
         /*
         printf("Recv from %d with data from: %d and size:%d \n", 0, (me)*N/p, N*N/p);
         MPI_Recv(&a[me * N / p][0], N * N / p, MPI_INT, i, 0, MPI_COMM_WORLD, 0);
@@ -154,6 +158,8 @@ int main(int argc, char *argv[])
 
 
     /* Quit */
+
+    MPI_Type_free(&offset_mpi_vector);
 
     MPI_Finalize();
     return 0;
