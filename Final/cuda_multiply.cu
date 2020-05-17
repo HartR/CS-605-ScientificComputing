@@ -10,15 +10,26 @@
  
 using namespace std;
 
- __global__ void __multiply__ (double* a, double* b, double* result, int offset, int half_length)
+ __global__ void __multiply__ (double* a, double* b, double* c, int m, int n, int k, int offset)
  {
-     int pixel = blockIdx.x * blockDim.x + threadIdx.x;
+     int row = blockIdx.y * blockDim.y + threadIdx.y; 
+     int col = blockIdx.x * blockDim.x + threadIdx.x;
+     int sum = 0;
+     if( col < k && row < m) 
+     {
+         for(int i = offset; i < n/2; i++) 
+         {
+             sum += a[row * n + i] * b[i * k + col];
+         }
+         c[row * k + col + offset] = sum;
+     }
+     /*int pixel = blockIdx.x * blockDim.x + threadIdx.x;
      if (pixel < half_length)
      {
           printf("\nIn matrix b, current value in result: %f, value at %d: %f, ", result[pixel], pixel, b[pixel]);
           result[pixel] = b[pixel+offset];
      }
-     printf("\n\n");
+     printf("\n\n");*/
  }
 
  /*
@@ -34,18 +45,18 @@ using namespace std;
 }
  */
 
-void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int array_length, int host_id)
+void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int m, int n, int k, int host_id)
 {
      cudaError_t cudaStatus;
      double* mat_a_device;
      double* mat_b_device;
      double* mat_result_device;
-     size_t matrix_size = array_length*sizeof(double);
 
      //figure out ideal thread/block numbers
      //I'm using 256 threads, because we found that to be optimal from assignment 4
      int thread_number = 256;
      int block_number = 1;
+     int array_length = m*k;
      if(array_length < thread_number)
      {
           thread_number = array_length;
@@ -55,19 +66,19 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ar
           //get the ceiling of the division
           block_number = (array_length + thread_number - 1)/thread_number;
      }
-     int offset = host_id * (array_length/2);
+     int offset = host_id * ((m*k)/2);
 
      //thread_number*block_number == array_length/2
-     cudaMalloc((void**)&mat_a_device, matrix_size);
-     cudaMalloc((void**)&mat_b_device, matrix_size);
-     cudaMalloc((void**)&mat_result_device, matrix_size/2);
-     cudaMemcpy(mat_a_device, mat_a, matrix_size, cudaMemcpyHostToDevice);
-     cudaMemcpy(mat_b_device, mat_b, matrix_size, cudaMemcpyHostToDevice);
-     cudaMemcpy(mat_result_device, mat_result, matrix_size/2, cudaMemcpyHostToDevice);
+     cudaMalloc((void**)&mat_a_device, sizeof(double)*m*n);
+     cudaMalloc((void**)&mat_b_device, sizeof(double)*n*k);
+     cudaMalloc((void**)&mat_result_device, sizeof(double)*m*k);
+     cudaMemcpy(mat_a_device, mat_a, sizeof(int)*m*n, cudaMemcpyHostToDevice);
+     cudaMemcpy(mat_b_device, mat_b, sizeof(int)*n*k, cudaMemcpyHostToDevice);
+     cudaMemcpy(mat_result_device, mat_result, sizeof(double)*m*k, cudaMemcpyHostToDevice);
      //PrintMatrix(mat_result, sqrt(array_length), host_id);
 
-     __multiply__ <<<block_number, thread_number>>> (mat_a_device, mat_b_device, mat_result_device, offset, array_length/2);
-     cudaMemcpy(mat_result, mat_result_device, matrix_size/2, cudaMemcpyDeviceToHost);
+     __multiply__ <<<block_number, thread_number>>> (mat_a_device, mat_b_device, mat_result_device, m, n, k, offset);
+     cudaMemcpy(mat_result, mat_result_device, sizeof(double)*m*k, cudaMemcpyDeviceToHost);
 
 
      cudaStatus = cudaGetLastError();

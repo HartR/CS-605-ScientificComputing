@@ -72,8 +72,8 @@ int main(int argc, char *argv[])
     matrix_b = new double[matrix_b_length];
     matrix_result_1 = new double[m*k];
     matrix_result_2 = new double[m*k];
-            PopulateMatrix(matrix_a, m, n);
-                    PopulateMatrix(matrix_b, n, k);
+    PopulateMatrix(matrix_a, m, n);
+    PopulateMatrix(matrix_b, n, k);
 
 
     //PrintMatrix(matrix_result, "matrix result before");
@@ -92,15 +92,13 @@ int main(int argc, char *argv[])
 
     if (current_node == sender) // master
     {
-        matrix_a[0] = 9999;
-        MPI_Send(matrix_a, matrix_a_length, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
-        MPI_Recv(matrix_b, matrix_b_length, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
+        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, m, n, k, current_node)
+        MPI_Recv(matrix_result_2, m*k, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
     }
     else if (current_node == receiver) // master
     {
-        matrix_b[0] = 7777;
-        MPI_Send(matrix_b, matrix_b_length, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
-        MPI_Recv(matrix_a, matrix_a_length, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
+        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_2, m, n, k, current_node)
+        MPI_Send(matrix_result_2, m*k, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
     }
     /*
     MPI_Datatype offset_mpi_vector;
@@ -115,9 +113,9 @@ int main(int argc, char *argv[])
     /* Data distribution */
     if (current_node == sender) // master
     {
-        PrintMatrix(matrix_a, m, n, "In sender, printing mat a");
+        PrintMatrix(matrix_result_2, m, k, "In sender, printing mat res 2");
 
-        PrintMatrix(matrix_b, n, k, "In sender, printing mat b");
+        PrintMatrix(matrix_result_1, m, k, "In sender, printing mat res 1");
         //PrintMatrix(matrix_result, "before first multiply?");
         //MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, SIZE, current_node);
 
@@ -144,9 +142,9 @@ int main(int argc, char *argv[])
     }
     else if (current_node = receiver) // second node
     {
-        PrintMatrix(matrix_b, n, k, "In receiver, printing mat b");
+        PrintMatrix(matrix_result_2, m, k, "In receiver, printing mat res 2");
 
-        PrintMatrix(matrix_a, m, n, "In receiver, printing mat a");
+        PrintMatrix(matrix_result_1, m, k, "In receiver, printing mat res 1");
 
         /*
         MPI_Recv(matrix_a, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
