@@ -3,16 +3,11 @@
 #include "mycuda.h"
 #include <stdlib.h>
 
-#define DIMENSION 6
-#define SIZE DIMENSION*DIMENSION
-#define HALF SIZE/2
+
 
 using namespace std;
 
-double* matrix_a = new double[SIZE];
-double* matrix_b = new double[SIZE];
-double* matrix_result_1 = new double[HALF];
-double* matrix_result_2 = new double[HALF];
+
 //double* merged_matrix;
 
 void PopulateMatrices(double* matrix_a, double* matrix_b)
