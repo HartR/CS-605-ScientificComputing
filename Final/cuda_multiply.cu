@@ -11,23 +11,10 @@ using namespace std;
 
  __global__ void __multiply__ (double* a, double* b, double* result, int id)
  {
-      
      int pixel = blockIdx.x * blockDim.x + threadIdx.x;
      pixel += offset*id;
      printf("\nIn matrix b: value at %d: %f, ", pixel, b[pixel]);
      result[pixel] = b[pixel];
-
-     for(i=me * N / p; i<(me+1) * N/p; ++i)
-     {
-         for (j=0; j < N; j++)
-         {
-             for (k=0; k<N; k++)
-             {
-                 c[i][j] += a[i][k] * b[k][j];
-             }
-         }
-     }
-
  }
 
  void PrintMatrix(double* matrix, int N, int p)
@@ -69,7 +56,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ar
      cudaMalloc((void**)&mat_result_device, matrix_size);
      cudaMemcpy(mat_a_device, mat_a, matrix_size, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_b_device, mat_b, matrix_size, cudaMemcpyHostToDevice);
-     __multiply__ <<<5, 5>>> (mat_a_device, mat_b_device, mat_result_device);
+     __multiply__ <<<5, 5>>> (mat_a_device, mat_b_device, mat_result_device, host_id);
      cudaMemcpy(mat_result, mat_result_device, matrix_size, cudaMemcpyDeviceToHost);
 
 
