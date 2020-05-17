@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
         
         MPI_Send(matrix_a, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
         MPI_Send(matrix_b, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
-        MPI_Send(matrix_result, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);*/
+        MPI_Send(matrix_result, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
 
         /*
         // assume p = 2
