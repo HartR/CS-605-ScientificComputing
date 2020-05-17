@@ -9,10 +9,10 @@
  
 using namespace std;
 
- __global__ void __multiply__ (double* a, double* b, double* result, int id)
+ __global__ void __multiply__ (double* a, double* b, double* result, int offset)
  {
      int pixel = blockIdx.x * blockDim.x + threadIdx.x;
-     //pixel += offset*id;
+     pixel += offset;
      //printf("\nIn matrix b: value at %d: %f, ", pixel, b[pixel]);
      result[pixel] = b[pixel];
  }
@@ -50,13 +50,14 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ar
      {
           block_number = array_length/thread_number;
      }
+     int offset = host_id * (array_length/2);
      //thread_number*block_number == array_length/2
      cudaMalloc((void**)&mat_a_device, matrix_size);
      cudaMalloc((void**)&mat_b_device, matrix_size);
      cudaMalloc((void**)&mat_result_device, matrix_size);
      cudaMemcpy(mat_a_device, mat_a, matrix_size, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_b_device, mat_b, matrix_size, cudaMemcpyHostToDevice);
-     __multiply__ <<<5, 5>>> (mat_a_device, mat_b_device, mat_result_device, host_id);
+     __multiply__ <<<5, 5>>> (mat_a_device, mat_b_device, mat_result_device, offset);
      cudaMemcpy(mat_result, mat_result_device, matrix_size, cudaMemcpyDeviceToHost);
 
 
