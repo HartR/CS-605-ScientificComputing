@@ -28,7 +28,7 @@ void PrintMatrix(double* matrix, string message)
     for (int row = 0; row < DIMENSION; row++)
     {
         for (int column = 0; column < DIMENSION; column++)
-            cout << "Index:" << DIMENSION * row + column << ", " << "Value:" << matrix[DIMENSION * row + column] << " | ";
+            cout << DIMENSION * row + column << ": " << "Value:" << matrix[DIMENSION * row + column] << " | ";
         cout << endl;
     }  
 }
