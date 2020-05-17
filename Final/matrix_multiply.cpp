@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
 
     //copy(matrix_result_1, SIZE, matrix_result);
     //copy(matrix_result_2, SIZE, matrix_result + SIZE/2);
-    if (current_node = receiver)
+    if (current_node = sender)
     {
         for (int i = 0; i < HALF; i++)
         {
