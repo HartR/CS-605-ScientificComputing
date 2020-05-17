@@ -147,7 +147,7 @@ int main(int argc, char *argv[])
 
     MPI_Barrier(MPI_COMM_WORLD);
 
-    PrintMatrix(matrix_result, "did it work please");
+    //PrintMatrix(matrix_result, "did it work please");
     //PrintHalf(matrix_result_1);
 
     //PrintHalf(matrix_result_2);
