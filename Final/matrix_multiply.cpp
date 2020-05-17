@@ -135,7 +135,12 @@ int main(int argc, char *argv[])
     }*/
 
     MPI_Barrier(MPI_COMM_WORLD);
-    PrintHalf(matrix_result_2);
+    for(int i = 0; i < HALF; i++)
+    {
+        matrix_result[i] = matrix_result_1[i];
+        matrix_result[i+HALF] = matrix_result_2[i];
+    }
+    PrintMatrix(matrix_result, "did it work please");
     //PrintHalf(matrix_result_1);
 
     //PrintHalf(matrix_result_2);
