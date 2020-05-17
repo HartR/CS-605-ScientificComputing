@@ -63,7 +63,7 @@ void MatrixMultiplyCuda(int host_id)
      cudaMalloc((void**)&mat_result_device, matrix_size/2);
      cudaMemcpy(mat_a_device, matrix_a, matrix_size, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_b_device, matrix_b, matrix_size, cudaMemcpyHostToDevice);
-     doubl* mat_result;
+     double* mat_result;
      if(host_id == 0)
           mat_result = matrix_result_1;
      else

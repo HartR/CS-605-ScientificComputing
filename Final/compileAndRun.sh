@@ -1,5 +1,6 @@
 #!/bin/bash
 
+rm final.binary
 chmod 600 /home/605/russell/.ssh/id_rsa
 git pull
 if [ -f final.binary ]; then
