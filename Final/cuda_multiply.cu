@@ -22,7 +22,10 @@ using namespace std;
              sum += a[row * n + i] * b[i * k + col];
          }
          c[row * k + col + offset] = sum;
+         printf("\n At location %d in c, assigned value %f, ", row * k + col + offset, c[row * k + col + offset]);
+
      }
+     printf("\n\n");
      /*int pixel = blockIdx.x * blockDim.x + threadIdx.x;
      if (pixel < half_length)
      {
