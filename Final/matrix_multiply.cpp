@@ -77,8 +77,9 @@ int main(int argc, char *argv[])
         //PrintMatrix(matrix_result, "before first multiply?");
         MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, SIZE, current_node);
 
-        PrintHalf(matrix_result_1);
+        //PrintHalf(matrix_result_1);
 
+        MPI_Recv(matrix_result_2, HALF, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
 
         //PrintMatrix(matrix_result, "hope this works?");
 
@@ -107,10 +108,10 @@ int main(int argc, char *argv[])
 
         MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_2, SIZE, current_node);
 
-        PrintHalf(matrix_result_2);
+        //PrintHalf(matrix_result_2);
 
         //MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result, SIZE, current_node);
-        //MPI_Send(matrix_result, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
+        MPI_Send(matrix_result_2, HALF, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
 
         //PrintMatrix(matrix_result, "did it work?");
         /*
@@ -121,8 +122,8 @@ int main(int argc, char *argv[])
 
     }
     //send matrix result from node 2 back to original node
-    //MPI_Barrier(MPI_COMM_WORLD);
-/*
+    /*MPI_Barrier(MPI_COMM_WORLD);
+
     // Result gathering 
     if (current_node = receiver)
     {
@@ -131,12 +132,11 @@ int main(int argc, char *argv[])
     else if (current_node = sender) // second node
     {
         MPI_Recv(matrix_result_2, HALF, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
-    }
-    */
+    }*/
 
     MPI_Barrier(MPI_COMM_WORLD);
     PrintHalf(matrix_result_2);
-    PrintHalf(matrix_result_1);
+    //PrintHalf(matrix_result_1);
 
     //PrintHalf(matrix_result_2);
     //copy(matrix_result_1, SIZE, matrix_result);
