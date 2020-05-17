@@ -12,6 +12,8 @@ using namespace std;
 double* matrix_a = new double[SIZE];
 double* matrix_b = new double[SIZE];
 double* matrix_result = new double[SIZE];
+double* matrix_result_1 = new double[SIZE/2];
+double* matrix_result_2 = new double[SIZE/2];
 
 void PopulateMatrices(double* matrix_a, double* matrix_b)
 {
@@ -65,9 +67,9 @@ int main(int argc, char *argv[])
     if (current_node == sender) // master
     {
         //PrintMatrix(matrix_result, "before first multiply?");
-        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result, SIZE, current_node);
+        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, SIZE, current_node);
 
-        PrintMatrix(matrix_result, "hope this works?");
+        //PrintMatrix(matrix_result, "hope this works?");
 
         /*
         MPI_Send(matrix_a, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
@@ -92,13 +94,13 @@ int main(int argc, char *argv[])
         MPI_Recv(matrix_result, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
                 PrintMatrix(matrix_result, "before second");*/
 
-        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result, SIZE, current_node);
+        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_2, SIZE, current_node);
 
 
         //MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result, SIZE, current_node);
         //MPI_Send(matrix_result, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
 
-        PrintMatrix(matrix_result, "did it work?");
+        //PrintMatrix(matrix_result, "did it work?");
         /*
         printf("Recv from %d with data from: %d and size:%d \n", 0, (me)*N/p, N*N/p);
         MPI_Recv(&a[me * N / p][0], N * N / p, MPI_INT, i, 0, MPI_COMM_WORLD, 0);
@@ -109,6 +111,22 @@ int main(int argc, char *argv[])
     //send matrix result from node 2 back to original node
     MPI_Barrier(MPI_COMM_WORLD);
 
+    // Result gathering 
+    if (current_node = receiver)
+    {
+        MPI_Send(matrix_result_2, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
+    }
+    else if (current_node = sender) // second node
+    {
+        MPI_Recv(matrix_result_2, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
+    }
+
+    MPI_Barrier(MPI_COMM_WORLD);
+
+    std::copy(matrix_result_1, SIZE, matrix_result);
+    std::copy(matrix_result_2, SIZE, matrix_result + SIZE/2);
+
+    PrintMatrix(matrix_result);
 
     /* Computation */
     /*

@@ -13,9 +13,8 @@ using namespace std;
  __global__ void __multiply__ (double* a, double* b, double* result, int offset)
  {
      int pixel = blockIdx.x * blockDim.x + threadIdx.x;
-     pixel += offset;
      printf("\nIn matrix b, current value in result: %f, value at %d: %f, ", result[pixel], pixel, b[pixel]);
-     result[pixel] = b[pixel];
+     result[pixel] = b[pixel+offset];
 
  }
 
