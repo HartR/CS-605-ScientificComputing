@@ -37,8 +37,9 @@ void PrintMatrix(double* matrix, string message)
 
 void PrintHalf(double* matrix)
 {
+    cout << endl;
     for (int i = 0; i < HALF; i++)
-        cout << endl << i << ": " << matrix[i] << ", ";
+        cout << i << ": " << matrix[i] << ", ";
     cout << endl;
 }
 
@@ -76,6 +77,9 @@ int main(int argc, char *argv[])
         //PrintMatrix(matrix_result, "before first multiply?");
         MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, SIZE, current_node);
 
+        PrintHalf(matrix_result_1);
+
+
         //PrintMatrix(matrix_result, "hope this works?");
 
         /*
@@ -103,6 +107,7 @@ int main(int argc, char *argv[])
 
         MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_2, SIZE, current_node);
 
+        PrintHalf(matrix_result_2);
 
         //MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result, SIZE, current_node);
         //MPI_Send(matrix_result, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
@@ -129,8 +134,8 @@ int main(int argc, char *argv[])
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
-    PrintHalf(matrix_result_2);
-    PrintHalf(matrix_result_1);
+    //PrintHalf(matrix_result_2);
+    //PrintHalf(matrix_result_1);
 
     //PrintHalf(matrix_result_2);
     //copy(matrix_result_1, SIZE, matrix_result);
