@@ -60,7 +60,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ar
      cudaMemcpy(mat_a_device, mat_a, matrix_size, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_b_device, mat_b, matrix_size, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_result_device, mat_result, matrix_size, cudaMemcpyHostToDevice);
-     PrintMatrix(result, sqrt(array_length), host_id);
+     PrintMatrix(mat_result, sqrt(array_length), host_id);
 
      __multiply__ <<<3, 3>>> (mat_a_device, mat_b_device, mat_result_device, offset);
      cudaMemcpy(mat_result, mat_result_device, matrix_size, cudaMemcpyDeviceToHost);
