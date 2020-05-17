@@ -2,7 +2,6 @@
 #include "mpi.h"
 #include "mycuda.h"
 #include <stdlib.h>
-#include <string> 
 
 #define DIMENSION 6
 #define SIZE DIMENSION*DIMENSION
@@ -134,7 +133,7 @@ int main(int argc, char *argv[])
             matrix_result[i+HALF] = matrix_result_2[2];
         }
     }
-    PrintMatrix(matrix_result, "final result in node " + to_string(current_node));
+    PrintMatrix(matrix_result, "final result ");
 
     /* Computation */
     /*
