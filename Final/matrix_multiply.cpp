@@ -10,7 +10,7 @@ using namespace std;
 
 //double* merged_matrix;
 
-void PopulateMatrices(double* matrix_a, double* matrix_b)
+void PopulateMatrices()
 {
     for (int j = 0; j < SIZE; j++)
     {
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 {
         
 
-    PopulateMatrices(matrix_a, matrix_b);
+    PopulateMatrices();
     //PrintMatrix(matrix_result, "matrix result before");
     //PrintMatrix(matrix_b, "matrix b before");
 
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
     if (current_node == sender) // master
     {
         //PrintMatrix(matrix_result, "before first multiply?");
-        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, SIZE, current_node);
+        MatrixMultiplyCuda(current_node);
 
         //PrintHalf(matrix_result_1);
 
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
         MPI_Recv(matrix_result, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
                 PrintMatrix(matrix_result, "before second");*/
 
-        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_2, SIZE, current_node);
+        MatrixMultiplyCuda(current_node);
 
         //PrintHalf(matrix_result_2);
 
