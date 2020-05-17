@@ -130,6 +130,7 @@ int main(int argc, char *argv[])
 
     MPI_Barrier(MPI_COMM_WORLD);
     PrintHalf(matrix_result_2);
+    PrintHalf(matrix_result_1);
 
     //PrintHalf(matrix_result_2);
     //copy(matrix_result_1, SIZE, matrix_result);
