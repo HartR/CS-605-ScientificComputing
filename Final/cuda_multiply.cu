@@ -13,7 +13,7 @@ using namespace std;
  {
      int pixel = blockIdx.x * blockDim.x + threadIdx.x;
      pixel += offset;
-     //printf("\nIn matrix b: value at %d: %f, ", pixel, b[pixel]);
+     printf("\nIn matrix b: value at %d: %f, ", pixel, b[pixel]);
      result[pixel] = b[pixel];
  }
 
@@ -57,7 +57,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ar
      cudaMalloc((void**)&mat_result_device, matrix_size);
      cudaMemcpy(mat_a_device, mat_a, matrix_size, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_b_device, mat_b, matrix_size, cudaMemcpyHostToDevice);
-     __multiply__ <<<5, 5>>> (mat_a_device, mat_b_device, mat_result_device, offset);
+     __multiply__ <<<6, 6>>> (mat_a_device, mat_b_device, mat_result_device, offset);
      cudaMemcpy(mat_result, mat_result_device, matrix_size, cudaMemcpyDeviceToHost);
 
 
