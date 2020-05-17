@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
+#include <math.h>
 
 
  
@@ -20,7 +21,7 @@ using namespace std;
 
  void PrintMatrix(double* matrix, int N, int p)
 {
-     printf("\nPrinting in CUDA with offset %d \n", p);
+     printf("\nPrinting in CUDA on host %d \n", p);
     for (int row = 0; row < N; row++)
     {
         for (int column = 0; column < N; column++)
@@ -59,7 +60,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ar
      cudaMemcpy(mat_a_device, mat_a, matrix_size, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_b_device, mat_b, matrix_size, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_result_device, mat_result, matrix_size, cudaMemcpyHostToDevice);
-     PrintMatrix(result, )
+     PrintMatrix(result, sqrt(array_length), host_id);
 
      __multiply__ <<<3, 3>>> (mat_a_device, mat_b_device, mat_result_device, offset);
      cudaMemcpy(mat_result, mat_result_device, matrix_size, cudaMemcpyDeviceToHost);
