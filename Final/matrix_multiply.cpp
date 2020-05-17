@@ -13,6 +13,7 @@ double* matrix_a = new double[SIZE];
 double* matrix_b = new double[SIZE];
 double* matrix_result_1 = new double[HALF];
 double* matrix_result_2 = new double[HALF];
+double* merged_matrix;
 
 void PopulateMatrices(double* matrix_a, double* matrix_b)
 {
@@ -44,7 +45,7 @@ void PrintHalf(double* matrix)
 
 double* MergeMatrices()
 {
-    double* merged_matrix = new double[]
+    merged_matrix = new double[]
     for(int i = 0; i < HALF; i++)
     {
         merged_matrix[i] = matrix_result_1[i];
