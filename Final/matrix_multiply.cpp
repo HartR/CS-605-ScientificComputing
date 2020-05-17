@@ -124,10 +124,10 @@ int main(int argc, char *argv[])
 
     MPI_Barrier(MPI_COMM_WORLD);
 
-    copy(matrix_result_1, SIZE, matrix_result);
-    copy(matrix_result_2, SIZE, matrix_result + SIZE/2);
+    //copy(matrix_result_1, SIZE, matrix_result);
+    //copy(matrix_result_2, SIZE, matrix_result + SIZE/2);
 
-    PrintMatrix(matrix_result);
+    PrintMatrix(matrix_result_2, "final result");
 
     /* Computation */
     /*
