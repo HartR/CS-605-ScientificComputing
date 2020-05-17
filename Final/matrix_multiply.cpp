@@ -7,6 +7,7 @@
 
 #define DIMENSION 6
 #define SIZE DIMENSION*DIMENSION
+#define HALF SIZE/2
 
 using namespace std;
 
@@ -115,19 +116,23 @@ int main(int argc, char *argv[])
     // Result gathering 
     if (current_node = receiver)
     {
-        MPI_Send(matrix_result_2, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
+        MPI_Send(matrix_result_2, SIZE/2, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
     }
     else if (current_node = sender) // second node
     {
-        MPI_Recv(matrix_result_2, SIZE, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
+        MPI_Recv(matrix_result_2, SIZE/2, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
 
     //copy(matrix_result_1, SIZE, matrix_result);
     //copy(matrix_result_2, SIZE, matrix_result + SIZE/2);
-
-    PrintMatrix(matrix_result_2, "final result");
+    for (int i = 0; i < SIZE/2; i++)
+    {
+        matrix_result[i] = matrix_result_1[i];
+        matrix_result[i+HALF] = matrix_result_2[2];
+    }
+    PrintMatrix(matrix_result, "final result");
 
     /* Computation */
     /*
