@@ -147,6 +147,11 @@ int main(int argc, char *argv[])
 
     MPI_Barrier(MPI_COMM_WORLD);
 
+    if(current_node == sender)
+    {
+        PrintMatrix(MergeMatrices(), "final");
+    }
+
     //PrintMatrix(matrix_result, "did it work please");
     //PrintHalf(matrix_result_1);
 
@@ -204,7 +209,7 @@ int main(int argc, char *argv[])
 
     MPI_Finalize();
 
-    PrintMatrix(MergeMatrices(), "final");
+    
     return 0;
 }
 
