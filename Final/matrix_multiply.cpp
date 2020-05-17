@@ -95,8 +95,8 @@ int main(int argc, char *argv[])
     else if (current_node == receiver) // master
     {
         PopulateMatrix(matrix_b, n, k);
-        MPI_Send(matrix_a, matrix_a_length, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD);
-        MPI_Recv(matrix_b, matrix_b_length, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
+        MPI_Send(matrix_b, matrix_b_length, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
+        MPI_Recv(matrix_a, matrix_a_length, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
     }
     /*
     MPI_Datatype offset_mpi_vector;
