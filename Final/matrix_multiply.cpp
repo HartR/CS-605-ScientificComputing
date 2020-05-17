@@ -39,8 +39,8 @@ int main(int argc, char *argv[])
         
 
     PopulateMatrices(matrix_a, matrix_b);
-    PrintMatrix(matrix_result, "matrix result before");
-    PrintMatrix(matrix_b, "matrix b before");
+    //PrintMatrix(matrix_result, "matrix result before");
+    //PrintMatrix(matrix_b, "matrix b before");
 
 
     MPI_Status status;

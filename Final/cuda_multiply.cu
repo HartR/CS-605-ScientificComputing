@@ -53,6 +53,8 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ar
           block_number = array_length/thread_number;
      }
      int offset = host_id * (array_length/2);
+     thread_number = array_length/2;
+
      //thread_number*block_number == array_length/2
      cudaMalloc((void**)&mat_a_device, matrix_size);
      cudaMalloc((void**)&mat_b_device, matrix_size);
@@ -62,7 +64,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ar
      cudaMemcpy(mat_result_device, mat_result, matrix_size, cudaMemcpyHostToDevice);
      PrintMatrix(mat_result, sqrt(array_length), host_id);
 
-     __multiply__ <<<3, 3>>> (mat_a_device, mat_b_device, mat_result_device, offset);
+     __multiply__ <<<1, thread_number>>> (mat_a_device, mat_b_device, mat_result_device, offset);
      cudaMemcpy(mat_result, mat_result_device, matrix_size, cudaMemcpyDeviceToHost);
 
 
