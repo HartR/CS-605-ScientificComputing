@@ -13,7 +13,7 @@ using namespace std;
  {
      int pixel = blockIdx.x * blockDim.x + threadIdx.x;
      //pixel += offset*id;
-     printf("\nIn matrix b: value at %d: %f, ", pixel, b[pixel]);
+     //printf("\nIn matrix b: value at %d: %f, ", pixel, b[pixel]);
      result[pixel] = b[pixel];
  }
 
