@@ -219,7 +219,7 @@ int main(int argc, char *argv[])
 
     /* Quit */
 
-    MPI_Type_free(&offset_mpi_vector);
+ //   MPI_Type_free(&offset_mpi_vector);
 
     MPI_Finalize();
 
