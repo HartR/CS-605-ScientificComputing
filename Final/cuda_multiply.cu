@@ -16,7 +16,7 @@ using namespace std;
       
      int i = blockIdx.y * blockDim.y + threadIdx.y; 
      int j = blockIdx.x * blockDim.x + threadIdx.x;
-     
+
      if( j < matrix_2_width && i < matrix_1_height) 
      {
           
@@ -27,6 +27,13 @@ using namespace std;
          }
          //printf("\matrix_1_width_matrix_2_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_2_width + j + offset, c[i * matrix_2_width + j + offset], a[i], b[i]);    
      }
+     if(i ==0 && j==0)
+     {
+     PrintMatrixLinear(a, matrix_a_height * matrix_a_width_matrix_b_height, "a in cuda");
+     PrintMatrixLinear(b, matrix_a_width_matrix_b_height * matrix_b_width, "b in cuda");
+     PrintMatrixLinear(c, matrix_a_height * matrix_b_width, "c in cuda");
+     }
+
 
 
      
