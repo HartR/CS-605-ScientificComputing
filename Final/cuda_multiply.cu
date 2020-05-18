@@ -32,13 +32,24 @@ void PrintMatrixLinear(double* matrix, int length, char* message)
                c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + matrix_b_width] * b[matrix_b_width * matrix_b_width + j];
                //printf("\ni is %d, a is %f, b is %f", i, a[i * matrix_a_width_matrix_b_height + i], b[i * matrix_b_width + j]);
          }
+
+          printf("\n c in cuda \n");
+          for (int i = 0; i < matrix_a_height * matrix_b_width; i++)
+               printf("%d: %f, ", i, c[i]);
+          printf("\n");
          //printf("\matrix_a_width_matrix_b_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_b_width + j + offset, c[i * matrix_b_width + j + offset], a[i], b[i]);    
      }
      if(i ==0 && j==0)
      {
-     PrintMatrixLinear(a, matrix_a_height * matrix_a_width_matrix_b_height, "a in cuda");
-     PrintMatrixLinear(b, matrix_a_width_matrix_b_height * matrix_b_width, "b in cuda");
-     PrintMatrixLinear(c, matrix_a_height * matrix_b_width, "c in cuda");
+          printf("\n a in cuda \n");
+          for (int i = 0; i < matrix_a_height * matrix_a_width_matrix_b_height; i++)
+               printf("%d: %f, ", i, a[i]);
+          printf("\n");
+
+          printf("\n b in cuda \n");
+          for (int i = 0; i < matrix_a_width_matrix_b_height * matrix_b_width; i++)
+               printf("%d: %f, ", i, b[i]);
+          printf("\n");
      }
 
 
