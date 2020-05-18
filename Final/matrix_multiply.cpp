@@ -101,6 +101,7 @@ int main(int argc, char *argv[])
     else if (current_node == receiver) // master
     {
         MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_2, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, current_node);
+        PrintMatrixLinear(matrix_result_2, matrix_result_length, "is this bad?");
         MPI_Send(matrix_result_2, matrix_result_length, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
     }
     /*
