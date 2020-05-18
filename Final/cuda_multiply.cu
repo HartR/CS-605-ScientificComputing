@@ -14,15 +14,14 @@ using namespace std;
  {
      
       
-     int i = blockIdx.y * blockDim.y + threadIdx.y; 
-     int j = blockIdx.x * blockDim.x + threadIdx.x;
+     int j = blockIdx.y * blockDim.y + threadIdx.y; 
+     int i = blockIdx.x * blockDim.x + threadIdx.x;
      
      if( j < matrix_2_width && i < matrix_1_height) 
      {
           
          for(int k = 0; k < matrix_1_width_matrix_2_height; k++) 
          {
-              printf("c pos: %d, a pos: %d, b pos: %d, offset: %d\n", i * matrix_2_width + j, i * matrix_1_width_matrix_2_height + matrix_2_width, matrix_2_width * matrix_2_width + j, offset);
                c[i * matrix_2_width + j] += a[i * matrix_1_width_matrix_2_height + matrix_2_width] * b[matrix_2_width * matrix_2_width + j];
                //printf("\ni is %d, a is %f, b is %f", i, a[i * matrix_1_width_matrix_2_height + i], b[i * matrix_2_width + j]);
          }
