@@ -95,7 +95,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
 
 
 
-     __multiply__ <<<block_number, thread_number>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset);
+     __multiply__ <<<2, 12>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset);
      cudaMemcpy(mat_result, mat_result_device, sizeof(double)*mat_result_length, cudaMemcpyDeviceToHost);
 
      cudaStatus = cudaGetLastError();
