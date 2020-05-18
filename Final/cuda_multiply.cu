@@ -30,9 +30,7 @@ __device__ int counter;
          }
          //printf("c[%i] is %f\n", i * matrix_b_width + j, c[i * matrix_b_width + j]);
          //printf("\matrix_a_width_matrix_b_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_b_width + j + offset, c[i * matrix_b_width + j + offset], a[i], b[i]);    
-     }
-     atomicAdd(&counter, 1);
-     
+     }     
      /*
      if(i ==0 && j==0)
      {
