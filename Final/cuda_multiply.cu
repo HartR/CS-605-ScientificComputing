@@ -12,15 +12,15 @@ using namespace std;
 
  __global__ void __multiply__ (double* a, double* b, double* c, int matrix_1_height, int matrix_1_width_matrix_2_height, int matrix_2_width, int offset)
  {
-
-     c[0] = 2020 + offset;
-     c[1] = 6565656 + offset;
-      /*
+     
+      
      int i = blockIdx.y * blockDim.y + threadIdx.y; 
      int j = blockIdx.x * blockDim.x + threadIdx.x;
+     
      int sum = 0;
      if( j < matrix_2_width && i < matrix_1_height) 
      {
+          /*
          for(int k = 0; k < matrix_1_width_matrix_2_height; k++) 
          {
                c[i * matrix_2_width + j] += a[i * matrix_1_width_matrix_2_height + matrix_2_width] * b[matrix_2_width * matrix_2_width + j];
@@ -31,10 +31,12 @@ using namespace std;
          printf("\n\n");
          //printf("\matrix_1_width_matrix_2_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_2_width + j + offset, c[i * matrix_2_width + j + offset], a[i], b[i]);
 
+         */
+         printf("For offset %d, i is %d, j is %d\n", offset, i, j);
      }
 
 
-     */
+     
      /*int pixel = blockIdx.x * blockDim.x + threadIdx.x;
      if (pixel < half_length)
      {
@@ -78,7 +80,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
           //get the ceiling of the division
           block_number = (array_length + thread_number - 1)/thread_number;
      }*/
-     int offset = host_id * ((matrix_1_height*matrix_2_width)/2);
+     int offset = host_id * (matrix_1_height*matrix_2_width)/2;
 
      //thread_number*block_number == array_length/2
      cudaMalloc((void**)&mat_a_device, sizeof(double)*matrix_1_height*matrix_1_width_matrix_2_height);
