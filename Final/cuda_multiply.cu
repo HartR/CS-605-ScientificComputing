@@ -16,9 +16,9 @@ using namespace std;
      int j = blockIdx.x * blockDim.x + threadIdx.x;
      //printf ("ONE: %d is i, %d is j, width is %d, height is%d\n", i, j, matrix_b_width, matrix_a_height); 
 
-     if( j <= offset && j < matrix_b_width * matrix_a_height) 
+     if( j < matrix_b_width * matrix_a_height) 
      {
-         printf ("TWO: %d is j, offset is%d\n", j, offset); 
+         printf ("TWO: %d is i, offset is%d\n", i, offset); 
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
          {
                c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + k] * b[k * matrix_b_width + j];
@@ -26,16 +26,6 @@ using namespace std;
          }
          //printf("c[%i] is %f\n", i * matrix_b_width + j, c[i * matrix_b_width + j]);
          //printf("\matrix_a_width_matrix_b_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_b_width + j + offset, c[i * matrix_b_width + j + offset], a[i], b[i]);    
-     }
-     else if ( j > offset && j < matrix_b_width * matrix_a_height)
-     {
-          printf ("ONE: %d is j, offset is%d\n", j, offset); 
-
-          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
-          {
-                c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + k] * b[k * matrix_b_width + j];
-                //printf("\n is %d, a is %f, b is %f", i, a[i * matrix_a_width_matrix_b_height + i], b[i * matrix_b_width + j]);
-          }
      }
      
      /*
@@ -103,7 +93,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
 
 
 
-     __multiply__ <<<1, 256>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset);
+     __multiply__ <<<4, 32>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset);
      cudaMemcpy(mat_result, mat_result_device, sizeof(double)*mat_result_length, cudaMemcpyDeviceToHost);
 
      cudaStatus = cudaGetLastError();
