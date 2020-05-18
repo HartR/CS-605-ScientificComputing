@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 
         PrintMatrix(matrix_result_1, matrix_a_height, matrix_b_width, "In sender, printing mat res 1");
 
-        PrintMatrix(MergeMatrices(), "merged matrix");
+        PrintMatrix(MergeMatrices(), matrix_a_height, matrix_b_width, "merged matrix");
         //PrintMatrix(matrix_result, "before first multiply?");
         //MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, SIZE, current_node);
 
