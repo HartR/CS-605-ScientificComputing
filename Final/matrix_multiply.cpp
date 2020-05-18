@@ -66,7 +66,6 @@ int main(int argc, char *argv[])
     matrix_result_length = matrix_a_height * matrix_b_width;
     matrix_a = new double[matrix_a_length];
     matrix_b = new double[matrix_b_length];
-
     matrix_result_1 = new double[matrix_result_length];
     matrix_result_2 = new double[matrix_result_length];
     PopulateMatrix(matrix_a, matrix_a_length);
@@ -86,17 +85,15 @@ int main(int argc, char *argv[])
 
     if (current_node == sender) // master
     {
-
-
         MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, current_node);
-        PrintMatrixLinear(matrix_result_1, matrix_result_length, "result?");
+        //PrintMatrixLinear(matrix_result_1, matrix_result_length, "result?");
         MPI_Recv(matrix_result_2, matrix_result_length, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
     }
     
-    else if (current_node == receiver)
+    else if (current_node == receiver)// second node
     {
         MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_2, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, current_node);
-        PrintMatrixLinear(matrix_result_2, matrix_result_length, "is this bad?");
+        //PrintMatrixLinear(matrix_result_2, matrix_result_length, "is this bad?");
         MPI_Send(matrix_result_2, matrix_result_length, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
     }
 
@@ -104,23 +101,24 @@ int main(int argc, char *argv[])
 
     if (current_node == sender) // master
     {
-        PrintMatrixLinear(matrix_result_2, matrix_a_height * matrix_b_width, "In sender, printing mat res 2");
+        //PrintMatrixLinear(matrix_result_2, matrix_a_height * matrix_b_width, "In sender, printing mat res 2");
 
-        PrintMatrixLinear(matrix_result_1, matrix_a_height * matrix_b_width, "In sender, printing mat res 1");
+        //PrintMatrixLinear(matrix_result_1, matrix_a_height * matrix_b_width, "In sender, printing mat res 1");
+
+        //this merges the two results and matrix_result_1 now has the complete solution inside of it
         MergeMatrices();
-        PrintMatrixLinear(matrix_result_1, matrix_a_height * matrix_b_width, "merged matrix");
+        //PrintMatrixLinear(matrix_result_1, matrix_a_height * matrix_b_width, "merged matrix");
 
-    }
+    }/*
     else if (current_node = receiver) // second node
     {
        PrintMatrixLinear(matrix_result_2, matrix_a_height * matrix_b_width, "In receiver, printing mat res 2");
 
        PrintMatrixLinear(matrix_result_1, matrix_a_height * matrix_b_width, "In receiver, printing mat res 1");
-    }
+    }*/
 
     MPI_Finalize();
 
-    
     return 0;
 }
 
