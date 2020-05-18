@@ -6,76 +6,87 @@
 #include "device_launch_parameters.h"
 #include <math.h>
 
-
+#define BLOCK_SIZE 16
  
 using namespace std;
 
- __global__ void __multiply__ (double* a, double* b, double* result, int offset, int half_length)
+ __global__ void __multiply__ (double* a, double* b, double* c, int matrix_1_height, int matrix_1_width_matrix_2_height, int matrix_2_width, int offset)
  {
-     int pixel = blockIdx.x * blockDim.x + threadIdx.x;
+     
+      
+     int i = blockIdx.y * blockDim.y + threadIdx.y; 
+     int j = blockIdx.x * blockDim.x + threadIdx.x;
+     
+     if( j < matrix_2_width && i < matrix_1_height) 
+     {
+          
+         for(int k = 0; k < matrix_1_width_matrix_2_height; k++) 
+         {
+               c[i * matrix_2_width + j] += a[i * matrix_1_width_matrix_2_height + matrix_2_width] * b[matrix_2_width * matrix_2_width + j];
+               //printf("\ni is %d, a is %f, b is %f", i, a[i * matrix_1_width_matrix_2_height + i], b[i * matrix_2_width + j]);
+         }
+         //printf("\matrix_1_width_matrix_2_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_2_width + j + offset, c[i * matrix_2_width + j + offset], a[i], b[i]);    
+     }
+
+
+     
+     /*int pixel = blockIdx.x * blockDim.x + threadIdx.x;
      if (pixel < half_length)
      {
           printf("\nIn matrix b, current value in result: %f, value at %d: %f, ", result[pixel], pixel, b[pixel]);
           result[pixel] = b[pixel+offset];
      }
-     printf("\n\n");
+     printf("\matrix_1_width_matrix_2_height\matrix_1_width_matrix_2_height");*/
  }
 
- /*
- void PrintMatrix(double* matrix, int N, int p)
-{
-     printf("\nPrinting in CUDA on host %d \n", p);
-    for (int row = 0; row < N; row++)
-    {
-        for (int column = 0; column < N; column++)
-            printf("%f ", matrix[N * row + column]);
-        printf("\n");
-    }  
-}
- */
+ 
+ void PrintMatrixLinear(double* matrix, int length, string message)
+ {
+     printf("\n" + message + "\n");
+     for (int i = 0; i < length; i++)
+          printf("%d: %f, ", i, matrix[i]);
+     printf("\n");
+ }
 
-void MatrixMultiplyCuda(int host_id)
+void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int matrix_1_height, int matrix_1_width_matrix_2_height, int matrix_2_width, int host_id)
 {
      cudaError_t cudaStatus;
      double* mat_a_device;
      double* mat_b_device;
      double* mat_result_device;
-     size_t matrix_size = SIZE*sizeof(double);
 
      //figure out ideal thread/block numbers
-     //I'm using 256 threads, because we found that to be optimal from assignment 4
-     int thread_number = 256;
+     //I'matrix_1_height using 256 threads, because we found that to be optimal from assignment 4
+     /*int thread_number = 256;
      int block_number = 1;
-     if(SIZE < thread_number)
+     int array_length = matrix_1_height*matrix_2_width;
+     if(array_length < thread_number)
      {
           thread_number = SIZE;
      }
      else if (SIZE > thread_number)
      {
           //get the ceiling of the division
-          block_number = (SIZE + thread_number - 1)/thread_number;
-     }
-     int offset = host_id * (HALF);
+          block_number = (array_length + thread_number - 1)/thread_number;
+     }*/
+     int offset = host_id * (matrix_1_height*matrix_2_width)/2;
 
-     //thread_number*block_number == HALF
-     cudaMalloc((void**)&mat_a_device, matrix_size);
-     cudaMalloc((void**)&mat_b_device, matrix_size);
-     cudaMalloc((void**)&mat_result_device, matrix_size/2);
-     cudaMemcpy(mat_a_device, matrix_a, matrix_size, cudaMemcpyHostToDevice);
-     cudaMemcpy(mat_b_device, matrix_b, matrix_size, cudaMemcpyHostToDevice);
-     double* mat_result;
-     if(host_id == 0)
-          mat_result = matrix_result_1;
-     else
-          mat_result = matrix_result_2;
-     
-     cudaMemcpy(mat_result_device, mat_result, matrix_size/2, cudaMemcpyHostToDevice);
+     //thread_number*block_number == array_length/2
+     cudaMalloc((void**)&mat_a_device, sizeof(double)*matrix_1_height*matrix_1_width_matrix_2_height);
+     cudaMalloc((void**)&mat_b_device, sizeof(double)*matrix_1_width_matrix_2_height*matrix_2_width);
+     cudaMalloc((void**)&mat_result_device, sizeof(double)*matrix_1_height*matrix_2_width);
+     cudaMemcpy(mat_a_device, mat_a, sizeof(int)*matrix_1_height*matrix_1_width_matrix_2_height, cudaMemcpyHostToDevice);
+     cudaMemcpy(mat_b_device, mat_b, sizeof(int)*matrix_1_width_matrix_2_height*matrix_2_width, cudaMemcpyHostToDevice);
+     cudaMemcpy(mat_result_device, mat_result, sizeof(double)*matrix_1_height*matrix_2_width, cudaMemcpyHostToDevice);
+     //PrintMatrix(mat_result, sqrt(array_length), host_id);
 
-     //PrintMatrix(mat_result, sqrt(SIZE), host_id);
+     unsigned int grid_rows = (matrix_1_height + BLOCK_SIZE - 1) / BLOCK_SIZE;
+     unsigned int grid_cols = (matrix_2_width + BLOCK_SIZE - 1) / BLOCK_SIZE;
+     dim3 dimGrid(grid_cols, grid_rows);
+     dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE);
 
-     __multiply__ <<<block_number, thread_number>>> (mat_a_device, mat_b_device, mat_result_device, offset, HALF);
-     cudaMemcpy(mat_result, mat_result_device, matrix_size/2, cudaMemcpyDeviceToHost);
-
+     __multiply__ <<<dimGrid, dimBlock>>> (mat_a_device, mat_b_device, mat_result_device, matrix_1_height, matrix_1_width_matrix_2_height, matrix_2_width, offset);
+     cudaMemcpy(mat_result, mat_result_device, sizeof(double)*matrix_1_height*matrix_2_width, cudaMemcpyDeviceToHost);
 
      cudaStatus = cudaGetLastError();
      if (cudaStatus != cudaSuccess) {
