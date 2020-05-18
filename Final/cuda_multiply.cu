@@ -8,15 +8,19 @@
  
 using namespace std;
 
- __global__ void __multiply__ (double* a, double* b, double* c, int matrix_a_height, int matrix_a_width_matrix_b_height, int matrix_b_width, int offset)
+__device__ int counter;
+
+ __global__ void __multiply__ (double* a, double* b, double* c, int matrix_a_height, int matrix_a_width_matrix_b_height, int matrix_b_width, int offset, mat_result_length)
  {
      
       
      int i = blockIdx.y * blockDim.y + threadIdx.y; 
      int j = blockIdx.x * blockDim.x + threadIdx.x;
+     j+= offset;
+     
      //printf ("ONE: %d is i, %d is j, width is %d, height is%d\n", i, j, matrix_b_width, matrix_a_height); 
 
-     if( j < matrix_b_width * matrix_a_height) 
+     if( counter < mat_result_length/2 && j < matrix_b_width * matrix_a_height) 
      {
          printf ("TWO: %d is i, offset is%d\n", i, offset); 
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
@@ -27,6 +31,7 @@ using namespace std;
          //printf("c[%i] is %f\n", i * matrix_b_width + j, c[i * matrix_b_width + j]);
          //printf("\matrix_a_width_matrix_b_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_b_width + j + offset, c[i * matrix_b_width + j + offset], a[i], b[i]);    
      }
+     atomicAdd(&counter, 1);
      
      /*
      if(i ==0 && j==0)
@@ -90,10 +95,10 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
      cudaMemcpy(mat_a_device, mat_a, sizeof(double)*matrix_a_height*matrix_a_width_matrix_b_height, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_b_device, mat_b, sizeof(double)*matrix_a_width_matrix_b_height*matrix_b_width, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_result_device, mat_result, sizeof(double)*mat_result_length, cudaMemcpyHostToDevice);
+     counter = 0;
 
 
-
-     __multiply__ <<<4, 32>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset);
+     __multiply__ <<<4, 32>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset, mat_result_length);
      cudaMemcpy(mat_result, mat_result_device, sizeof(double)*mat_result_length, cudaMemcpyDeviceToHost);
 
      cudaStatus = cudaGetLastError();
