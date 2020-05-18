@@ -49,7 +49,6 @@ void MergeMatrices()
     {
         matrix_result_1[i] = matrix_result_2[i];
     }
-    return merged_matrix;
 }
 
 
