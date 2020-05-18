@@ -10,7 +10,7 @@ using namespace std;
 
 __device__ int counter;
 
- __global__ void __multiply__ (double* a, double* b, double* c, int matrix_a_height, int matrix_a_width_matrix_b_height, int matrix_b_width, int offset, mat_result_length)
+ __global__ void __multiply__ (double* a, double* b, double* c, int matrix_a_height, int matrix_a_width_matrix_b_height, int matrix_b_width, int offset, int mat_result_length)
  {
      
       
