@@ -5,8 +5,6 @@
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 #include <math.h>
-
-#define BLOCK_SIZE 16
  
 using namespace std;
 
@@ -16,9 +14,9 @@ using namespace std;
       
      int i = blockIdx.y * blockDim.y + threadIdx.y; 
      int j = blockIdx.x * blockDim.x + threadIdx.x;
-     printf ("ONE: %d is i, %d is j, width is %d, height is%d\n", i, j, matrix_b_width, matrix_a_height); 
+     //printf ("ONE: %d is i, %d is j, width is %d, height is%d\n", i, j, matrix_b_width, matrix_a_height); 
 
-     if( j < matrix_b_width && i < matrix_a_height) 
+     if( j < matrix_b_width * matrix_a_height) 
      {
          printf ("TWO: %d is i, %d is j, width is %d, height is%d\n", i, j, matrix_b_width, matrix_a_height); 
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
@@ -95,7 +93,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
 
 
 
-     __multiply__ <<<2, 12>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset);
+     __multiply__ <<<1, 256>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset);
      cudaMemcpy(mat_result, mat_result_device, sizeof(double)*mat_result_length, cudaMemcpyDeviceToHost);
 
      cudaStatus = cudaGetLastError();
