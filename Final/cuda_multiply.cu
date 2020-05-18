@@ -10,22 +10,20 @@
  
 using namespace std;
 
- __global__ void __multiply__ (double* a, double* b, double* c, int matrix_a_height, int matrix_a_width_matrix_b_height, int matrix_b_width, int offset)
+ __global__ void __multiply__ (double* a, double* b, double* c, int m, int n, int k, int offset)
  {
      
       
-     int i = blockIdx.y * blockDim.y + threadIdx.y; 
-     int j = blockIdx.x * blockDim.x + threadIdx.x;
-
-     if( j < matrix_b_width && i < matrix_a_height) 
+     int row = blockIdx.y * blockDim.y + threadIdx.y; 
+     int col = blockIdx.x * blockDim.x + threadIdx.x;
+     int sum = 0;
+     if( col < k && row < m) 
      {
-          
-         for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
+         for(int i = 0; i < n; i++) 
          {
-               c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + matrix_b_width] * b[matrix_b_width * matrix_b_width + j];
-               //printf("\ni is %d, a is %f, b is %f", i, a[i * matrix_a_width_matrix_b_height + i], b[i * matrix_b_width + j]);
+             sum += a[row * n + i] * b[i * k + col];
          }
-         //printf("\matrix_a_width_matrix_b_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_b_width + j + offset, c[i * matrix_b_width + j + offset], a[i], b[i]);    
+         c[row * k + col] = sum;
      }
      /*
      if(i ==0 && j==0)
@@ -94,7 +92,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
      dim3 dimGrid(grid_cols, grid_rows);
      dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE);
 
-     __multiply__ <<<5, 6>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset);
+     __multiply__ <<<dimGrid, dimBlock>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset);
      cudaMemcpy(mat_result, mat_result_device, sizeof(double)*matrix_a_height*matrix_b_width, cudaMemcpyDeviceToHost);
 
      printf("\n result in buda before, with offset %d \n", offset);
