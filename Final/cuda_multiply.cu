@@ -68,27 +68,27 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
 
      //figure out ideal thread/block numbers
      //I'matrix_a_height using 256 threads, because we found that to be optimal from assignment 4
-     /*int thread_number = 256;
+     int thread_number = 256;
      int block_number = 1;
-     int array_length = matrix_a_height*matrix_b_width;
-     if(array_length < thread_number)
+     int mat_result_length = matrix_a_height*matrix_b_width;
+     if(mat_result_length < thread_number)
      {
-          thread_number = SIZE;
+          thread_number = mat_result_length;
      }
-     else if (SIZE > thread_number)
+     else if (mat_result_length < thread_number)
      {
           //get the ceiling of the division
-          block_number = (array_length + thread_number - 1)/thread_number;
-     }*/
-     int offset = host_id * (matrix_a_height*matrix_b_width)/2;
+          block_number = (mat_result_length + thread_number - 1)/thread_number;
+     }
+     int offset = host_id * (mat_result_length)/2;
 
      //thread_number*block_number == array_length/2
      cudaMalloc((void**)&mat_a_device, sizeof(double)*matrix_a_height*matrix_a_width_matrix_b_height);
      cudaMalloc((void**)&mat_b_device, sizeof(double)*matrix_a_width_matrix_b_height*matrix_b_width);
-     cudaMalloc((void**)&mat_result_device, sizeof(double)*matrix_a_height*matrix_b_width);
+     cudaMalloc((void**)&mat_result_device, sizeof(double)*mat_result_length);
      cudaMemcpy(mat_a_device, mat_a, sizeof(double)*matrix_a_height*matrix_a_width_matrix_b_height, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_b_device, mat_b, sizeof(double)*matrix_a_width_matrix_b_height*matrix_b_width, cudaMemcpyHostToDevice);
-     cudaMemcpy(mat_result_device, mat_result, sizeof(double)*matrix_a_height*matrix_b_width, cudaMemcpyHostToDevice);
+     cudaMemcpy(mat_result_device, mat_result, sizeof(double)*mat_result_length, cudaMemcpyHostToDevice);
 
      //unsigned int grid_rows = (matrix_a_height + BLOCK_SIZE - 1) / BLOCK_SIZE;
      //unsigned int grid_cols = (matrix_b_width + BLOCK_SIZE - 1) / BLOCK_SIZE;
@@ -96,7 +96,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
      //dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE);
 
      __multiply__ <<<1, 256>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset);
-     cudaMemcpy(mat_result, mat_result_device, sizeof(double)*matrix_a_height*matrix_b_width, cudaMemcpyDeviceToHost);
+     cudaMemcpy(mat_result, mat_result_device, sizeof(double)*mat_result_length, cudaMemcpyDeviceToHost);
 /*
      printf("\n result in buda before, with offset %d \n", offset);
      for (int i = 0; i < matrix_a_height * matrix_b_width; i++)
