@@ -10,22 +10,22 @@
  
 using namespace std;
 
- __global__ void __multiply__ (double* a, double* b, double* c, int matrix_1_height, int matrix_1_width_matrix_2_height, int matrix_2_width, int offset)
+ __global__ void __multiply__ (double* a, double* b, double* c, int matrix_a_height, int matrix_a_width_matrix_b_height, int matrix_b_width, int offset)
  {
      
       
      int i = blockIdx.y * blockDim.y + threadIdx.y; 
      int j = blockIdx.x * blockDim.x + threadIdx.x;
 
-     if( j < matrix_2_width && i < matrix_1_height) 
+     if( j < matrix_b_width && i < matrix_a_height) 
      {
           
-         for(int k = 0; k < matrix_1_width_matrix_2_height; k++) 
+         for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
          {
-               c[i * matrix_2_width + j] += a[i * matrix_1_width_matrix_2_height + matrix_2_width] * b[matrix_2_width * matrix_2_width + j];
-               //printf("\ni is %d, a is %f, b is %f", i, a[i * matrix_1_width_matrix_2_height + i], b[i * matrix_2_width + j]);
+               c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + matrix_b_width] * b[matrix_b_width * matrix_b_width + j];
+               //printf("\ni is %d, a is %f, b is %f", i, a[i * matrix_a_width_matrix_b_height + i], b[i * matrix_b_width + j]);
          }
-         //printf("\matrix_1_width_matrix_2_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_2_width + j + offset, c[i * matrix_2_width + j + offset], a[i], b[i]);    
+         //printf("\matrix_a_width_matrix_b_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_b_width + j + offset, c[i * matrix_b_width + j + offset], a[i], b[i]);    
      }
      if(i ==0 && j==0)
      {
@@ -43,7 +43,7 @@ using namespace std;
           printf("\nIn matrix b, current value in result: %f, value at %d: %f, ", result[pixel], pixel, b[pixel]);
           result[pixel] = b[pixel+offset];
      }
-     printf("\matrix_1_width_matrix_2_height\matrix_1_width_matrix_2_height");*/
+     printf("\matrix_a_width_matrix_b_height\matrix_a_width_matrix_b_height");*/
  }
 
  
@@ -55,7 +55,7 @@ using namespace std;
      printf("\n");
  }
 
-void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int matrix_1_height, int matrix_1_width_matrix_2_height, int matrix_2_width, int host_id)
+void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int matrix_a_height, int matrix_a_width_matrix_b_height, int matrix_b_width, int host_id)
 {
      cudaError_t cudaStatus;
      double* mat_a_device;
@@ -63,10 +63,10 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
      double* mat_result_device;
 
      //figure out ideal thread/block numbers
-     //I'matrix_1_height using 256 threads, because we found that to be optimal from assignment 4
+     //I'matrix_a_height using 256 threads, because we found that to be optimal from assignment 4
      /*int thread_number = 256;
      int block_number = 1;
-     int array_length = matrix_1_height*matrix_2_width;
+     int array_length = matrix_a_height*matrix_b_width;
      if(array_length < thread_number)
      {
           thread_number = SIZE;
@@ -76,24 +76,24 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
           //get the ceiling of the division
           block_number = (array_length + thread_number - 1)/thread_number;
      }*/
-     int offset = host_id * (matrix_1_height*matrix_2_width)/2;
+     int offset = host_id * (matrix_a_height*matrix_b_width)/2;
 
      //thread_number*block_number == array_length/2
-     cudaMalloc((void**)&mat_a_device, sizeof(double)*matrix_1_height*matrix_1_width_matrix_2_height);
-     cudaMalloc((void**)&mat_b_device, sizeof(double)*matrix_1_width_matrix_2_height*matrix_2_width);
-     cudaMalloc((void**)&mat_result_device, sizeof(double)*matrix_1_height*matrix_2_width);
-     cudaMemcpy(mat_a_device, mat_a, sizeof(int)*matrix_1_height*matrix_1_width_matrix_2_height, cudaMemcpyHostToDevice);
-     cudaMemcpy(mat_b_device, mat_b, sizeof(int)*matrix_1_width_matrix_2_height*matrix_2_width, cudaMemcpyHostToDevice);
-     cudaMemcpy(mat_result_device, mat_result, sizeof(double)*matrix_1_height*matrix_2_width, cudaMemcpyHostToDevice);
+     cudaMalloc((void**)&mat_a_device, sizeof(double)*matrix_a_height*matrix_a_width_matrix_b_height);
+     cudaMalloc((void**)&mat_b_device, sizeof(double)*matrix_a_width_matrix_b_height*matrix_b_width);
+     cudaMalloc((void**)&mat_result_device, sizeof(double)*matrix_a_height*matrix_b_width);
+     cudaMemcpy(mat_a_device, mat_a, sizeof(int)*matrix_a_height*matrix_a_width_matrix_b_height, cudaMemcpyHostToDevice);
+     cudaMemcpy(mat_b_device, mat_b, sizeof(int)*matrix_a_width_matrix_b_height*matrix_b_width, cudaMemcpyHostToDevice);
+     cudaMemcpy(mat_result_device, mat_result, sizeof(double)*matrix_a_height*matrix_b_width, cudaMemcpyHostToDevice);
      //PrintMatrix(mat_result, sqrt(array_length), host_id);
 
-     unsigned int grid_rows = (matrix_1_height + BLOCK_SIZE - 1) / BLOCK_SIZE;
-     unsigned int grid_cols = (matrix_2_width + BLOCK_SIZE - 1) / BLOCK_SIZE;
+     unsigned int grid_rows = (matrix_a_height + BLOCK_SIZE - 1) / BLOCK_SIZE;
+     unsigned int grid_cols = (matrix_b_width + BLOCK_SIZE - 1) / BLOCK_SIZE;
      dim3 dimGrid(grid_cols, grid_rows);
      dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE);
 
-     __multiply__ <<<dimGrid, dimBlock>>> (mat_a_device, mat_b_device, mat_result_device, matrix_1_height, matrix_1_width_matrix_2_height, matrix_2_width, offset);
-     cudaMemcpy(mat_result, mat_result_device, sizeof(double)*matrix_1_height*matrix_2_width, cudaMemcpyDeviceToHost);
+     __multiply__ <<<dimGrid, dimBlock>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset);
+     cudaMemcpy(mat_result, mat_result_device, sizeof(double)*matrix_a_height*matrix_b_width, cudaMemcpyDeviceToHost);
 
      cudaStatus = cudaGetLastError();
      if (cudaStatus != cudaSuccess) {
