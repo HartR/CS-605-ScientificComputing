@@ -60,20 +60,20 @@ double* MergeMatrices()
 
 int main(int argc, char *argv[])
 {
-    // input dimensions of input matrices: m X n matrix (A)
-    // n X k matrix (B)    
-    int m, n, k;
-    m = atoi(argv[1]);
-    n = atoi(argv[2]);
-    k = atoi(argv[3]);
-    matrix_a_length = m*n;
-    matrix_b_length = n*k;
+    // input dimensions of input matrices: matrix_1_height X matrix_1_width_matrix_2_height matrix (A)
+    // matrix_1_width_matrix_2_height X matrix_2_width matrix (B)    
+    int matrix_1_height, matrix_1_width_matrix_2_height, matrix_2_width;
+    matrix_1_height = atoi(argv[1]);
+    matrix_1_width_matrix_2_height = atoi(argv[2]);
+    matrix_2_width = atoi(argv[3]);
+    matrix_a_length = matrix_1_height*matrix_1_width_matrix_2_height;
+    matrix_b_length = matrix_1_width_matrix_2_height*matrix_2_width;
     matrix_a = new double[matrix_a_length];
     matrix_b = new double[matrix_b_length];
-    matrix_result_1 = new double[m*k];
-    matrix_result_2 = new double[m*k];
-    PopulateMatrix(matrix_a, m, n);
-    PopulateMatrix(matrix_b, n, k);
+    matrix_result_1 = new double[matrix_1_height*matrix_2_width];
+    matrix_result_2 = new double[matrix_1_height*matrix_2_width];
+    PopulateMatrix(matrix_a, matrix_1_height, matrix_1_width_matrix_2_height);
+    PopulateMatrix(matrix_b, matrix_1_width_matrix_2_height, matrix_2_width);
 
 
     //PrintMatrix(matrix_result, "matrix result before");
@@ -92,17 +92,17 @@ int main(int argc, char *argv[])
 
     if (current_node == sender) // master
     {
-        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, m, n, k, current_node);
-        MPI_Recv(matrix_result_2, m*k, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
+        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, matrix_1_height, matrix_1_width_matrix_2_height, matrix_2_width, current_node);
+        MPI_Recv(matrix_result_2, matrix_1_height*matrix_2_width, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
     }
     else if (current_node == receiver) // master
     {
-        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_2, m, n, k, current_node);
-        MPI_Send(matrix_result_2, m*k, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
+        MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_2, matrix_1_height, matrix_1_width_matrix_2_height, matrix_2_width, current_node);
+        MPI_Send(matrix_result_2, matrix_1_height*matrix_2_width, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
     }
     /*
     MPI_Datatype offset_mpi_vector;
-    \jm hyg6]m  x6PI_Type_vector( 2, 2, 4, MPI_DOUBLE, &offset_mpi_vector);
+    \jm hyg6]matrix_1_height  x6PI_Type_vector( 2, 2, 4, MPI_DOUBLE, &offset_mpi_vector);
     MPI_Type_commit(&offset_mpi_vector);
     */
 
@@ -113,9 +113,9 @@ int main(int argc, char *argv[])
     /* Data distribution */
     if (current_node == sender) // master
     {
-        PrintMatrix(matrix_result_2, m, k, "In sender, printing mat res 2");
+        PrintMatrix(matrix_result_2, matrix_1_height, matrix_2_width, "In sender, printing mat res 2");
 
-        PrintMatrix(matrix_result_1, m, k, "In sender, printing mat res 1");
+        PrintMatrix(matrix_result_1, matrix_1_height, matrix_2_width, "In sender, printing mat res 1");
         //PrintMatrix(matrix_result, "before first multiply?");
         //MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, SIZE, current_node);
 
@@ -134,17 +134,17 @@ int main(int argc, char *argv[])
         // assume p = 2
         for (i=1; i<p; i++)
         {
-            printf("send to  %d with data from: %d and size:%d \n", i, (i)*N/p, N*N/p);
-            MPI_Send(&a[i * N / p][0], N * N / p, MPI_INT, i, 0, MPI_COMM_WORLD);
-            MPI_Send(b, N * N, MPI_INT, i, 0, MPI_COMM_WORLD);
+            printf("send to  %d with data from: %d and size:%d \matrix_1_width_matrix_2_height", i, (i)*matrix_1_width_matrix_2_height/p, matrix_1_width_matrix_2_height*matrix_1_width_matrix_2_height/p);
+            MPI_Send(&a[i * matrix_1_width_matrix_2_height / p][0], matrix_1_width_matrix_2_height * matrix_1_width_matrix_2_height / p, MPI_INT, i, 0, MPI_COMM_WORLD);
+            MPI_Send(b, matrix_1_width_matrix_2_height * matrix_1_width_matrix_2_height, MPI_INT, i, 0, MPI_COMM_WORLD);
         }
         */
     }
     else if (current_node = receiver) // second node
     {
-       PrintMatrix(matrix_result_2, m, k, "In receiver, printing mat res 2");
+       PrintMatrix(matrix_result_2, matrix_1_height, matrix_2_width, "In receiver, printing mat res 2");
 
-       PrintMatrix(matrix_result_1, m, k, "In receiver, printing mat res 1");
+       PrintMatrix(matrix_result_1, matrix_1_height, matrix_2_width, "In receiver, printing mat res 1");
 
         /*
         MPI_Recv(matrix_a, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
@@ -161,9 +161,9 @@ int main(int argc, char *argv[])
 
         //PrintMatrix(matrix_result, "did it work?");
         /*
-        printf("Recv from %d with data from: %d and size:%d \n", 0, (me)*N/p, N*N/p);
-        MPI_Recv(&a[me * N / p][0], N * N / p, MPI_INT, i, 0, MPI_COMM_WORLD, 0);
-        MPI_Recv(b, N * N, MPI_INT, i, 0, MPI_COMM_WORLD, 0);
+        printf("Recv from %d with data from: %d and size:%d \matrix_1_width_matrix_2_height", 0, (me)*matrix_1_width_matrix_2_height/p, matrix_1_width_matrix_2_height*matrix_1_width_matrix_2_height/p);
+        MPI_Recv(&a[me * matrix_1_width_matrix_2_height / p][0], matrix_1_width_matrix_2_height * matrix_1_width_matrix_2_height / p, MPI_INT, i, 0, MPI_COMM_WORLD, 0);
+        MPI_Recv(b, matrix_1_width_matrix_2_height * matrix_1_width_matrix_2_height, MPI_INT, i, 0, MPI_COMM_WORLD, 0);
         */
 
     }
@@ -201,14 +201,14 @@ int main(int argc, char *argv[])
 
     /* Computation */
     /*
-    for(i=me * N / p; i<(me+1) * N/p; ++i)
+    for(i=me * matrix_1_width_matrix_2_height / p; i<(me+1) * matrix_1_width_matrix_2_height/p; ++i)
     {
-        for (j=0; j < N; j++)
+        for (j=0; j < matrix_1_width_matrix_2_height; j++)
         {
             c[i][j] = 0;
-            for (k=0; k<N; k++)
+            for (matrix_2_width=0; matrix_2_width<matrix_1_width_matrix_2_height; matrix_2_width++)
             {
-                c[i][j] += a[i][k] * b[k][j];
+                c[i][j] += a[i][matrix_2_width] * b[matrix_2_width][j];
             }
         }
     }
@@ -216,13 +216,13 @@ int main(int argc, char *argv[])
     // Result gathering 
     if (me != 0 )
     {
-        MPI_Send(&c[(me) * N/p][0], N*N/p, MPI_INT, 0, 0, MPI_COMM_WORLD);
+        MPI_Send(&c[(me) * matrix_1_width_matrix_2_height/p][0], matrix_1_width_matrix_2_height*matrix_1_width_matrix_2_height/p, MPI_INT, 0, 0, MPI_COMM_WORLD);
     }
     else
     {
         for (i=1; i<p; i++)
         {
-            MPI_Recv(&c[i * N/p][0], N * N / p, MPI_INT, i, 0, MPI_COMM_WORLD, 0);
+            MPI_Recv(&c[i * matrix_1_width_matrix_2_height/p][0], matrix_1_width_matrix_2_height * matrix_1_width_matrix_2_height / p, MPI_INT, i, 0, MPI_COMM_WORLD, 0);
         }
     }
 
@@ -232,9 +232,9 @@ int main(int argc, char *argv[])
     // print the matrix 
     if (me == 0)
     {
-        for (i=0; i<N; i++) {
-            printf("\n\t| ");
-            for (j=0; j<N; j++)
+        for (i=0; i<matrix_1_width_matrix_2_height; i++) {
+            printf("\matrix_1_width_matrix_2_height\t| ");
+            for (j=0; j<matrix_1_width_matrix_2_height; j++)
                 printf("%2d ", c[i][j]);
             printf("|");
         }
