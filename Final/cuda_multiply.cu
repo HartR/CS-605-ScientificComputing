@@ -16,7 +16,7 @@ using namespace std;
      int j = blockIdx.x * blockDim.x + threadIdx.x;
      //printf ("ONE: %d is i, %d is j, width is %d, height is%d\n", i, j, matrix_b_width, matrix_a_height); 
 
-     if( j =< offset && j < matrix_b_width * matrix_a_height) 
+     if( j <= offset && j < matrix_b_width * matrix_a_height) 
      {
          printf ("TWO: %d is j, offset is%d\n", j, offset); 
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
