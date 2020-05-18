@@ -32,7 +32,7 @@ using namespace std;
          //printf("\matrix_1_width_matrix_2_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_2_width + j + offset, c[i * matrix_2_width + j + offset], a[i], b[i]);
 
          */
-         printf("For offset %d, i is %d, j is %d\n", offset, i, j);
+         printf("For offset %d, i is %d, j is %d, a is %f, b is %f\n", offset, i, j, a[i], b[i]);
      }
 
 
