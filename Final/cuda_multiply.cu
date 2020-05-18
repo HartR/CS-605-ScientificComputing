@@ -10,13 +10,6 @@
  
 using namespace std;
 
-void PrintMatrixLinear(double* matrix, int length, char* message)
-{
-    printf("\n %s \n", message);
-    for (int i = 0; i < length; i++)
-         printf("%d: %f, ", i, matrix[i]);
-    printf("\n");
-}
  __global__ void __multiply__ (double* a, double* b, double* c, int matrix_a_height, int matrix_a_width_matrix_b_height, int matrix_b_width, int offset)
  {
      
@@ -36,12 +29,12 @@ void PrintMatrixLinear(double* matrix, int length, char* message)
      }
      if(i ==0 && j==0)
      {
-          printf("\n a in cuda \n");
+          printf("\n a in cuda, with offset %d \n", offset);
           for (int i = 0; i < matrix_a_height * matrix_a_width_matrix_b_height; i++)
                printf("%d: %f, ", i, a[i]);
           printf("\n");
 
-          printf("\n b in cuda \n");
+          printf("\n b in cuda, with offset %d \n", offset);
           for (int i = 0; i < matrix_a_width_matrix_b_height * matrix_b_width; i++)
                printf("%d: %f, ", i, b[i]);
           printf("\n");
