@@ -77,7 +77,10 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
           block_number = (array_length + thread_number - 1)/thread_number;
      }*/
      int offset = host_id * (matrix_a_height*matrix_b_width)/2;
-
+     printf("\n a in buda before, with offset %d \n", offset);
+     for (int i = 0; i < matrix_a_height * matrix_a_width_matrix_b_height; i++)
+          printf("%d: %f, ", i, a[i]);
+     printf("\n");
      //thread_number*block_number == array_length/2
      cudaMalloc((void**)&mat_a_device, sizeof(double)*matrix_a_height*matrix_a_width_matrix_b_height);
      cudaMalloc((void**)&mat_b_device, sizeof(double)*matrix_a_width_matrix_b_height*matrix_b_width);
