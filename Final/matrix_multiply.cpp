@@ -113,9 +113,9 @@ int main(int argc, char *argv[])
     /* Data distribution */
     if (current_node == sender) // master
     {
-       // PrintMatrix(matrix_result_2, m, k, "In sender, printing mat res 2");
+        PrintMatrix(matrix_result_2, m, k, "In sender, printing mat res 2");
 
-        //PrintMatrix(matrix_result_1, m, k, "In sender, printing mat res 1");
+        PrintMatrix(matrix_result_1, m, k, "In sender, printing mat res 1");
         //PrintMatrix(matrix_result, "before first multiply?");
         //MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, SIZE, current_node);
 
@@ -142,9 +142,9 @@ int main(int argc, char *argv[])
     }
     else if (current_node = receiver) // second node
     {
-       // PrintMatrix(matrix_result_2, m, k, "In receiver, printing mat res 2");
+       PrintMatrix(matrix_result_2, m, k, "In receiver, printing mat res 2");
 
-       // PrintMatrix(matrix_result_1, m, k, "In receiver, printing mat res 1");
+       PrintMatrix(matrix_result_1, m, k, "In receiver, printing mat res 1");
 
         /*
         MPI_Recv(matrix_a, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);

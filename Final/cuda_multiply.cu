@@ -91,7 +91,8 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int m,
      __multiply__ <<<dimGrid, dimBlock>>> (mat_a_device, mat_b_device, mat_result_device, m, n, k, offset);
      cudaMemcpy(mat_result, mat_result_device, sizeof(double)*m*k, cudaMemcpyDeviceToHost);
 
-
+     mat_result[0] = 9999;
+     mat_result[1] = 7777;
      cudaStatus = cudaGetLastError();
      if (cudaStatus != cudaSuccess) {
           fprintf(stderr, "addKernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
