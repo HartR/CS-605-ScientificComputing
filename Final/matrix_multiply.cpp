@@ -99,7 +99,6 @@ int main(int argc, char *argv[])
     {
         MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_2, matrix_1_height, matrix_1_width_matrix_2_height, matrix_2_width, current_node);
         MPI_Send(matrix_result_2, matrix_1_height*matrix_2_width, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
-        PrintMatrix(matrix_result_2, matrix_1_height, matrix_2_width, "is it a scope issue?");
     }
     /*
     MPI_Datatype offset_mpi_vector;
