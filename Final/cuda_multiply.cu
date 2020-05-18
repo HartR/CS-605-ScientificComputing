@@ -94,7 +94,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
      dim3 dimGrid(grid_cols, grid_rows);
      dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE);
 
-     __multiply__ <<<5, 6>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset);
+     __multiply__ <<<1, 256>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset);
      cudaMemcpy(mat_result, mat_result_device, sizeof(double)*matrix_a_height*matrix_b_width, cudaMemcpyDeviceToHost);
 
      printf("\n result in buda before, with offset %d \n", offset);
