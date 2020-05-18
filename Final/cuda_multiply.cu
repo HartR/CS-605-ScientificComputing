@@ -16,6 +16,7 @@ __device__ int counter;
       
      int i = blockIdx.y * blockDim.y + threadIdx.y; 
      int j = blockIdx.x * blockDim.x + threadIdx.x;
+     j+=offset;
      
      //printf ("ONE: %d is i, %d is j, width is %d, height is%d\n", i, j, matrix_b_width, matrix_a_height); 
      int coutner_val = atomicAdd(&counter, 1);
