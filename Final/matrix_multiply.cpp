@@ -94,6 +94,7 @@ int main(int argc, char *argv[])
         PrintMatrixLinear(matrix_a, matrix_a_length, "a after populating");
 
         MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, current_node);
+        PrintMatrixLinear(matrix_result_1, matrix_result_length, "result?");
         //MPI_Recv(matrix_result_2, matrix_a_height*matrix_b_width, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
     }
     /*
