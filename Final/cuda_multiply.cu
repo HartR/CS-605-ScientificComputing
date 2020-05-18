@@ -22,7 +22,6 @@ using namespace std;
           
          for(int k = 0; k < matrix_1_width_matrix_2_height; k++) 
          {
-              printf("c pos: %d, a pos: %d, b pos: %d, offset: %d\n", i * matrix_2_width + j, i * matrix_1_width_matrix_2_height + matrix_2_width, matrix_2_width * matrix_2_width + j, offset);
                c[i * matrix_2_width + j] += a[i * matrix_1_width_matrix_2_height + matrix_2_width] * b[matrix_2_width * matrix_2_width + j];
                //printf("\ni is %d, a is %f, b is %f", i, a[i * matrix_1_width_matrix_2_height + i], b[i * matrix_2_width + j]);
          }
@@ -40,18 +39,14 @@ using namespace std;
      printf("\matrix_1_width_matrix_2_height\matrix_1_width_matrix_2_height");*/
  }
 
- /*
- void PrintMatrix(double* matrix, int matrix_1_width_matrix_2_height, int p)
-{
-     printf("\nPrinting in CUDA on host %d \matrix_1_width_matrix_2_height", p);
-    for (int i = 0; i < matrix_1_width_matrix_2_height; i++)
-    {
-        for (int column = 0; column < matrix_1_width_matrix_2_height; column++)
-            printf("%f ", matrix[matrix_1_width_matrix_2_height * i + column]);
-        printf("\matrix_1_width_matrix_2_height");
-    }  
-}
- */
+ 
+ void PrintMatrixLinear(double* matrix, int length, string message)
+ {
+     printf("\n" + message + "\n");
+     for (int i = 0; i < length; i++)
+          printf("%d: %f, ", i, matrix[i]);
+     printf("\n");
+ }
 
 void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int matrix_1_height, int matrix_1_width_matrix_2_height, int matrix_2_width, int host_id)
 {
