@@ -85,10 +85,15 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
      cudaMalloc((void**)&mat_a_device, sizeof(double)*matrix_a_height*matrix_a_width_matrix_b_height);
      cudaMalloc((void**)&mat_b_device, sizeof(double)*matrix_a_width_matrix_b_height*matrix_b_width);
      cudaMalloc((void**)&mat_result_device, sizeof(double)*matrix_a_height*matrix_b_width);
-     cudaMemcpy(mat_a_device, mat_a, sizeof(int)*matrix_a_height*matrix_a_width_matrix_b_height, cudaMemcpyHostToDevice);
-     cudaMemcpy(mat_b_device, mat_b, sizeof(int)*matrix_a_width_matrix_b_height*matrix_b_width, cudaMemcpyHostToDevice);
+     cudaMemcpy(mat_a_device, mat_a, sizeof(double)*matrix_a_height*matrix_a_width_matrix_b_height, cudaMemcpyHostToDevice);
+     cudaMemcpy(mat_b_device, mat_b, sizeof(double)*matrix_a_width_matrix_b_height*matrix_b_width, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_result_device, mat_result, sizeof(double)*matrix_a_height*matrix_b_width, cudaMemcpyHostToDevice);
      //PrintMatrix(mat_result, sqrt(array_length), host_id);
+
+     printf("\n acuda in buda before, with offset %d \n", offset);
+     for (int i = 0; i < matrix_a_height * matrix_a_width_matrix_b_height; i++)
+          printf("%d: %f, ", i, mat_a_device[i]);
+     printf("\n");
 
      unsigned int grid_rows = (matrix_a_height + BLOCK_SIZE - 1) / BLOCK_SIZE;
      unsigned int grid_cols = (matrix_b_width + BLOCK_SIZE - 1) / BLOCK_SIZE;
