@@ -13,7 +13,7 @@ int matrix_a_length;
 int matrix_b_length;
 int matrix_result_length;
 
-void PopulateMatrix(double* matrix, int outer, int inner)
+void PopulateMatrix(double* matrix, int length)
 {
     for (int i = 0; i < outer; ++i) {
         for (int j = 0; j < inner; ++j) {
@@ -69,8 +69,10 @@ int main(int argc, char *argv[])
 
     matrix_result_1 = new double[matrix_result_length];
     matrix_result_2 = new double[matrix_result_length];
-    PopulateMatrix(matrix_a, matrix_a_height, matrix_a_width_matrix_b_height);
-    PopulateMatrix(matrix_b, matrix_a_width_matrix_b_height, matrix_b_width);
+    PopulateMatrix(matrix_a, matrix_a_length);
+    PopulateMatrix(matrix_b, matrix_b_length);
+
+    PrintMatrixLinear(matrix_a, matrix_a_length, "a after populating");
 
 
     //PrintMatrix(matrix_result, "matrix result before");
