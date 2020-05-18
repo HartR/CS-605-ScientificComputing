@@ -8,8 +8,6 @@
  
 using namespace std;
 
-__device__ int counter;
-
  __global__ void __multiply__ (double* a, double* b, double* c, int matrix_a_height, int matrix_a_width_matrix_b_height, int matrix_b_width, int offset, int mat_result_length)
  {
      
@@ -18,11 +16,11 @@ __device__ int counter;
      int j = blockIdx.x * blockDim.x + threadIdx.x;
 
      //I tried many solutions, but this is the only one that worked. It's not elegent, but it will have to do.
-     //I have a counter to check which iteration I'm on. Because we can't ensure that the kernel will be called the 
+     //The var j keeps track of where on the array we are. Because we can't ensure that the kernel will be called the 
      //Correct number of times as there are elements in the result matrix
      //The offset variable is at the halfpoint of the result matrix size
-     //this ensures that the multiplication work will be done 
-     //int counter_val = atomicAdd(&counter, 1);
+     //This ensures that the multiplication work will be done halfway on the first node
+     //And the second half will be done on the second node
      if(j < mat_result_length/2 && offset == 0) 
      {
           printf ("TWO: %d is j, offset is%d\n", j, offset); 
@@ -53,7 +51,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
      double* mat_result_device;
 
      //figure out ideal thread/block numbers
-     //I'matrix_a_height using 256 threads, because we found that to be optimal from assignment 4
+     //I'm targeting 256 threads, because we found that to be optimal from assignment 4
      int thread_number = 256;
      int block_number = 1;
      int mat_result_length = matrix_a_height*matrix_b_width;
@@ -67,7 +65,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
           block_number = (mat_result_length + thread_number - 1)/thread_number;
      }
      
-     //
+     //offset is the halfway point in the result matrix
      int offset = host_id * (mat_result_length)/2;
 
 
@@ -77,10 +75,9 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
      cudaMemcpy(mat_a_device, mat_a, sizeof(double)*matrix_a_height*matrix_a_width_matrix_b_height, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_b_device, mat_b, sizeof(double)*matrix_a_width_matrix_b_height*matrix_b_width, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_result_device, mat_result, sizeof(double)*mat_result_length, cudaMemcpyHostToDevice);
-     counter = 0;
 
 
-     __multiply__ <<<4, 32>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset, mat_result_length);
+     __multiply__ <<<block_number, thread_number>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset, mat_result_length);
      cudaMemcpy(mat_result, mat_result_device, sizeof(double)*mat_result_length, cudaMemcpyDeviceToHost);
 
      cudaStatus = cudaGetLastError();
