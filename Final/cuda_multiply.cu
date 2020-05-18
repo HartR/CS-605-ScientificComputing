@@ -29,6 +29,7 @@ using namespace std;
          //printf("\matrix_a_width_matrix_b_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_b_width + j + offset, c[i * matrix_b_width + j + offset], a[i], b[i]);    
      }
      
+     /*
      if(i ==0 && j==0)
      {
           printf("\n a in cuda, with offset %d \n", offset);
@@ -40,7 +41,7 @@ using namespace std;
           for (int i = 0; i < matrix_a_width_matrix_b_height * matrix_b_width; i++)
                printf("%d: %f, ", i, b[i]);
           printf("\n");
-     }
+     }*/
      
 
 
