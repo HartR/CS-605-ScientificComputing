@@ -90,11 +90,6 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
      cudaMemcpy(mat_result_device, mat_result, sizeof(double)*matrix_a_height*matrix_b_width, cudaMemcpyHostToDevice);
      //PrintMatrix(mat_result, sqrt(array_length), host_id);
 
-     printf("\n acuda in buda before, with offset %d \n", offset);
-     for (int i = 0; i < matrix_a_height * matrix_a_width_matrix_b_height; i++)
-          printf("%d: %f, ", i, mat_a_device[i]);
-     printf("\n");
-
      unsigned int grid_rows = (matrix_a_height + BLOCK_SIZE - 1) / BLOCK_SIZE;
      unsigned int grid_cols = (matrix_b_width + BLOCK_SIZE - 1) / BLOCK_SIZE;
      dim3 dimGrid(grid_cols, grid_rows);
