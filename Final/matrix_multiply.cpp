@@ -73,7 +73,6 @@ int main(int argc, char *argv[])
     matrix_result_2 = new double[matrix_result_length];
     PopulateMatrix(matrix_a, matrix_a_length);
     PopulateMatrix(matrix_b, matrix_b_length);
-    //PrintMatrixLinear(matrix_a, matrix_a_length, "a after populating");
 
 
     MPI_Status status;
@@ -105,26 +104,15 @@ int main(int argc, char *argv[])
 
     if (current_node == sender) // master
     {
+        //this merges the two results and matrix_result_1 now has the complete solution inside of it
+        //work is officially over when this is done and we can get the final time
+        MergeMatrices();
         gettimeofday(&end, NULL);
         double ijk_runtime = 0.0;
         ijk_runtime = (end.tv_sec - start.tv_sec) * 1e6;
         ijk_runtime = (ijk_runtime + (end.tv_usec - start.tv_usec)) * 1e-6;
-        cout << "Runtime: " << ijk_runtime << endl;
-        //PrintMatrixLinear(matrix_result_2, matrix_a_height * matrix_b_width, "In sender, printing mat res 2");
-
-        //PrintMatrixLinear(matrix_result_1, matrix_a_height * matrix_b_width, "In sender, printing mat res 1");
-
-        //this merges the two results and matrix_result_1 now has the complete solution inside of it
-        MergeMatrices();
-        //PrintMatrixLinear(matrix_result_1, matrix_a_height * matrix_b_width, "merged matrix");
-
-    }/*
-    else if (current_node = receiver) // second node
-    {
-       PrintMatrixLinear(matrix_result_2, matrix_a_height * matrix_b_width, "In receiver, printing mat res 2");
-
-       PrintMatrixLinear(matrix_result_1, matrix_a_height * matrix_b_width, "In receiver, printing mat res 1");
-    }*/
+        cout << "Runtime: " << ijk_runtime << " Matrix Result Length: " << matrix_result_length << endl;
+    }
 
     MPI_Finalize();
 
