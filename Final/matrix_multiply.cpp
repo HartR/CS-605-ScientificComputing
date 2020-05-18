@@ -2,6 +2,8 @@
 #include "mpi.h"
 #include "mycuda.h"
 #include <stdlib.h>
+#include <sys/time.h>
+
 
 using namespace std;
 
@@ -13,6 +15,7 @@ int matrix_a_length;
 int matrix_b_length;
 int matrix_result_length;
 int matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width;
+struct timeval start, end;
 
 
 void PopulateMatrix(double* matrix, int length)
@@ -70,7 +73,7 @@ int main(int argc, char *argv[])
     matrix_result_2 = new double[matrix_result_length];
     PopulateMatrix(matrix_a, matrix_a_length);
     PopulateMatrix(matrix_b, matrix_b_length);
-    PrintMatrixLinear(matrix_a, matrix_a_length, "a after populating");
+    //PrintMatrixLinear(matrix_a, matrix_a_length, "a after populating");
 
 
     MPI_Status status;
@@ -85,6 +88,7 @@ int main(int argc, char *argv[])
 
     if (current_node == sender) // master
     {
+        gettimeofday(&start, NULL);
         MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, current_node);
         //PrintMatrixLinear(matrix_result_1, matrix_result_length, "result?");
         MPI_Recv(matrix_result_2, matrix_result_length, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
@@ -101,6 +105,11 @@ int main(int argc, char *argv[])
 
     if (current_node == sender) // master
     {
+        gettimeofday(&end, NULL);
+        double ijk_runtime = 0.0;
+        ijk_runtime = (end.tv_sec - start.tv_sec) * 1e6;
+        ijk_runtime = (ijk_runtime + (end.tv_usec - start.tv_usec)) * 1e-6;
+        cout << "Runtime: " << ijk_runtime << endl;
         //PrintMatrixLinear(matrix_result_2, matrix_a_height * matrix_b_width, "In sender, printing mat res 2");
 
         //PrintMatrixLinear(matrix_result_1, matrix_a_height * matrix_b_width, "In sender, printing mat res 1");
