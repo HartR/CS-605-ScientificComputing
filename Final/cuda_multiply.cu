@@ -70,8 +70,8 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
      {
           //get the ceiling of the division
           block_number = (array_length + thread_number - 1)/thread_number;
-     }
-     int offset = host_id * ((matrix_1_height*matrix_2_width)/2);*/
+     }*/
+     int offset = host_id * ((matrix_1_height*matrix_2_width)/2);
 
      //thread_number*block_number == array_length/2
      cudaMalloc((void**)&mat_a_device, sizeof(double)*matrix_1_height*matrix_1_width_matrix_2_height);
