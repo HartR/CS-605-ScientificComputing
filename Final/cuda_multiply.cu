@@ -19,7 +19,7 @@ using namespace std;
 
      if( offset <= i && i < matrix_a_height * matrix_b_width) 
      {
-         printf ("%d is i and %d is offset", i, offset); 
+         printf ("%d is i\n", i); 
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
          {
                c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + k] * b[k * matrix_b_width + j];
@@ -31,7 +31,7 @@ using namespace std;
 
      if( offset >= i && i < matrix_a_height * matrix_b_width) 
      {
-          printf ("%d is i and %d is offset", i, offset); 
+          //printf ("%d is i and %d is offset", i, offset); 
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
          {
                c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + k] * b[k * matrix_b_width + j];
