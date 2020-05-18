@@ -22,9 +22,10 @@ using namespace std;
           
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
          {
-               c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + matrix_b_width] * b[matrix_b_width * matrix_b_width + j];
-               //printf("\ni is %d, a is %f, b is %f", i, a[i * matrix_a_width_matrix_b_height + i], b[i * matrix_b_width + j]);
+               c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + k] * b[k * matrix_b_width + j];
+               //printf("\n is %d, a is %f, b is %f", i, a[i * matrix_a_width_matrix_b_height + i], b[i * matrix_b_width + j]);
          }
+         printf("c[%i] is %f\n", i * matrix_b_width + j, c[i * matrix_b_width + j]);
          //printf("\matrix_a_width_matrix_b_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_b_width + j + offset, c[i * matrix_b_width + j + offset], a[i], b[i]);    
      }
      
