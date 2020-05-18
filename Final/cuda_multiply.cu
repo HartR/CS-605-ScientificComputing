@@ -23,7 +23,7 @@ using namespace std;
      //And the second half will be done on the second node
      if(j < mat_result_length/2 && offset == 0) 
      {
-          printf ("TWO: %d is j, offset is%d\n", j, offset); 
+          //printf ("TWO: %d is j, offset is%d\n", j, offset); 
 
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
          {
@@ -32,16 +32,13 @@ using namespace std;
      }
      else if (j > offset && j < mat_result_length/2 + offset) 
      {
-         printf ("ONE: %d is j, offset is%d\n", j, offset); 
+         //printf ("ONE: %d is j, offset is%d\n", j, offset); 
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
          {
                c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + k] * b[k * matrix_b_width + j];
          }     
      }
  }
-
- 
-
 
 void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int matrix_a_height, int matrix_a_width_matrix_b_height, int matrix_b_width, int host_id)
 {
