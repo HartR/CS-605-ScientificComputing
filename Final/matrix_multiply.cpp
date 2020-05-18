@@ -12,6 +12,8 @@ double* matrix_result_2;
 int matrix_a_length;
 int matrix_b_length;
 int matrix_result_length;
+int matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width;
+
 
 void PopulateMatrix(double* matrix, int length)
 {
@@ -55,22 +57,9 @@ int main(int argc, char *argv[])
     // input dimensions of input matrices: 
     // Matrix A: matrix_a_height  X  matrix_a_width_matrix_b_height 
     // Matrix B: matrix_a_width_matrix_b_height  X  matrix_b_width    
-    int matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width;
-    matrix_a_height = atoi(argv[1]);
-    matrix_a_width_matrix_b_height = atoi(argv[2]);
-    matrix_b_width = atoi(argv[3]);
-    matrix_a_length = matrix_a_height * matrix_a_width_matrix_b_height;
-    matrix_b_length = matrix_a_width_matrix_b_height * matrix_b_width;
-    matrix_result_length = matrix_a_height * matrix_b_width;
-    matrix_a = new double[matrix_a_length];
-    matrix_b = new double[matrix_b_length];
 
-    matrix_result_1 = new double[matrix_result_length];
-    matrix_result_2 = new double[matrix_result_length];
-    PopulateMatrix(matrix_a, matrix_a_length);
-    PopulateMatrix(matrix_b, matrix_b_length);
 
-    PrintMatrixLinear(matrix_a, matrix_a_length, "a after populating");
+    
 
 
     //PrintMatrix(matrix_result, "matrix result before");
@@ -89,14 +78,30 @@ int main(int argc, char *argv[])
 
     if (current_node == sender) // master
     {
+        matrix_a_height = atoi(argv[1]);
+        matrix_a_width_matrix_b_height = atoi(argv[2]);
+        matrix_b_width = atoi(argv[3]);
+        matrix_a_length = matrix_a_height * matrix_a_width_matrix_b_height;
+        matrix_b_length = matrix_a_width_matrix_b_height * matrix_b_width;
+        matrix_result_length = matrix_a_height * matrix_b_width;
+        matrix_a = new double[matrix_a_length];
+        matrix_b = new double[matrix_b_length];
+
+        matrix_result_1 = new double[matrix_result_length];
+        matrix_result_2 = new double[matrix_result_length];
+        PopulateMatrix(matrix_a, matrix_a_length);
+        PopulateMatrix(matrix_b, matrix_b_length);
+        PrintMatrixLinear(matrix_a, matrix_a_length, "a after populating");
+
         MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, current_node);
-        MPI_Recv(matrix_result_2, matrix_a_height*matrix_b_width, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
+        //MPI_Recv(matrix_result_2, matrix_a_height*matrix_b_width, MPI_DOUBLE, receiver, tag_unused, MPI_COMM_WORLD, &status);
     }
+    /*
     else if (current_node == receiver) // master
     {
         MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_2, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, current_node);
         MPI_Send(matrix_result_2, matrix_a_height*matrix_b_width, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD);
-    }
+    }*/
     /*
     MPI_Datatype offset_mpi_vector;
     \jm hyg6]matrix_a_height  x6PI_Type_vector( 2, 2, 4, MPI_DOUBLE, &offset_mpi_vector);
