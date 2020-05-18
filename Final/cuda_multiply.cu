@@ -30,7 +30,7 @@ __device__ int counter;
          //printf("c[%i] is %f\n", i * matrix_b_width + j, c[i * matrix_b_width + j]);
          //printf("\matrix_a_width_matrix_b_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_b_width + j + offset, c[i * matrix_b_width + j + offset], a[i], b[i]);    
      }
-     else if (coutner_val < mat_result_length/2 + offset) 
+     else if (counter_val > offset && coutner_val < mat_result_length/2 + offset) 
      {
          printf ("ONE: %d is i, offset is%d, counterval is %d\n", i, offset, coutner_val); 
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
