@@ -6,7 +6,7 @@
 #include "device_launch_parameters.h"
 #include <math.h>
 
-
+#define BLOCK_SIZE 16
  
 using namespace std;
 
@@ -17,12 +17,13 @@ using namespace std;
      int sum = 0;
      if( col < k && row < m) 
      {
-         for(int i = offset; i < n/2; i++) 
+         for(int i = 0; i < n/2; i++) 
          {
              sum += a[row * n + i] * b[i * k + col];
              printf("\ni is %d, a is %f, b is %f", i, a[row * n + i], b[i * k + col]);
          }
-         c[row * k + col + offset] = sum;
+         printf("sum is %f\n", sum);
+         c[row * k + col] = sum;
          printf("\n\n");
          //printf("\n At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", row * k + col + offset, c[row * k + col + offset], a[i], b[i]);
 
@@ -82,7 +83,12 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int m,
      cudaMemcpy(mat_result_device, mat_result, sizeof(double)*m*k, cudaMemcpyHostToDevice);
      //PrintMatrix(mat_result, sqrt(array_length), host_id);
 
-     __multiply__ <<<block_number, thread_number>>> (mat_a_device, mat_b_device, mat_result_device, m, n, k, offset);
+     unsigned int grid_rows = (m + BLOCK_SIZE - 1) / BLOCK_SIZE;
+     unsigned int grid_cols = (k + BLOCK_SIZE - 1) / BLOCK_SIZE;
+     dim3 dimGrid(grid_cols, grid_rows);
+     dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE);
+
+     __multiply__ <<<dimGrid, dimBlock>>> (mat_a_device, mat_b_device, mat_result_device, m, n, k, offset);
      cudaMemcpy(mat_result, mat_result_device, sizeof(double)*m*k, cudaMemcpyDeviceToHost);
 
 
