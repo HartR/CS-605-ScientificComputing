@@ -41,10 +41,11 @@ void PrintMatrixLinear(double* matrix, int length, string message)
     cout << endl;
 }
 
-double* MergeMatrices()
+//copy the 2nd half of matrix 2 to to matrix 1, making matrix 1 the complete result
+void MergeMatrices()
 {
     double* merged_matrix = new double[matrix_result_length];
-    for(int i = matrix_result_length/2; i < matrix_result_length/2; i++)
+    for(int i = matrix_result_length/2; i < matrix_result_length; i++)
     {
         matrix_result_1[i] = matrix_result_2[i];
     }
@@ -120,8 +121,8 @@ int main(int argc, char *argv[])
         PrintMatrixLinear(matrix_result_2, matrix_a_height * matrix_b_width, "In sender, printing mat res 2");
 
         PrintMatrixLinear(matrix_result_1, matrix_a_height * matrix_b_width, "In sender, printing mat res 1");
-
-        PrintMatrixLinear(MergeMatrices(), matrix_a_height * matrix_b_width, "merged matrix");
+        MergeMatrices();
+        PrintMatrixLinear(matrix_result_1, matrix_a_height * matrix_b_width, "merged matrix");
         //PrintMatrix(matrix_result, "before first multiply?");
         //MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, SIZE, current_node);
 
