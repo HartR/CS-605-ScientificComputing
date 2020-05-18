@@ -25,7 +25,7 @@ __device__ int counter;
      //int counter_val = atomicAdd(&counter, 1);
      if(j < mat_result_length/2 && offset == 0) 
      {
-          printf ("TWO: %d is j, offset is%d, counterval is %d\n", j, offset, counter_val); 
+          printf ("TWO: %d is j, offset is%d\n", j, offset); 
 
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
          {
@@ -34,7 +34,7 @@ __device__ int counter;
      }
      else if (j > offset && j < mat_result_length/2 + offset) 
      {
-         printf ("ONE: %d is j, offset is%d, counterval is %d\n", j, offset, counter_val); 
+         printf ("ONE: %d is j, offset is%d\n", j, offset); 
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
          {
                c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + k] * b[k * matrix_b_width + j];
