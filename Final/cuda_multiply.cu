@@ -25,7 +25,7 @@ using namespace std;
                c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + k] * b[k * matrix_b_width + j];
                //printf("\n is %d, a is %f, b is %f", i, a[i * matrix_a_width_matrix_b_height + i], b[i * matrix_b_width + j]);
          }
-         printf("c[%i] is %f\n", i * matrix_b_width + j, c[i * matrix_b_width + j]);
+         //printf("c[%i] is %f\n", i * matrix_b_width + j, c[i * matrix_b_width + j]);
          //printf("\matrix_a_width_matrix_b_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_b_width + j + offset, c[i * matrix_b_width + j + offset], a[i], b[i]);    
      }
      
@@ -97,11 +97,11 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
 
      __multiply__ <<<1, 256>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset);
      cudaMemcpy(mat_result, mat_result_device, sizeof(double)*matrix_a_height*matrix_b_width, cudaMemcpyDeviceToHost);
-
+/*
      printf("\n result in buda before, with offset %d \n", offset);
      for (int i = 0; i < matrix_a_height * matrix_b_width; i++)
           printf("%d: %f, ", i, mat_result[i]);
-     printf("\n");
+     printf("\n");*/
      cudaStatus = cudaGetLastError();
      if (cudaStatus != cudaSuccess) {
           fprintf(stderr, "addKernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
