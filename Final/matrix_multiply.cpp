@@ -33,6 +33,14 @@ void PrintMatrix(double* matrix, int outer, int inner, string message)
     } 
 }
 
+void PrintMatrixLinear(double* matrix, int length, string message)
+{
+    cout << endl << message << endl;
+    for (int i = 0; i < length; i++)
+        cout << i << ": " << matrix[i] << ", ";
+    cout << endl;
+}
+
 double* MergeMatrices()
 {
     double* merged_matrix = new double[matrix_result_length];
@@ -102,11 +110,11 @@ int main(int argc, char *argv[])
     /* Data distribution */
     if (current_node == sender) // master
     {
-        PrintMatrix(matrix_result_2, matrix_a_height, matrix_b_width, "In sender, printing mat res 2");
+        PrintMatrixLinear(matrix_result_2, matrix_a_height * matrix_b_width, "In sender, printing mat res 2");
 
-        PrintMatrix(matrix_result_1, matrix_a_height, matrix_b_width, "In sender, printing mat res 1");
+        PrintMatrixLinear(matrix_result_1, matrix_a_height * matrix_b_width, "In sender, printing mat res 1");
 
-        PrintMatrix(MergeMatrices(), matrix_a_height, matrix_b_width, "merged matrix");
+        PrintMatrixLinear(MergeMatrices(), matrix_a_height * matrix_b_width, "merged matrix");
         //PrintMatrix(matrix_result, "before first multiply?");
         //MatrixMultiplyCuda(matrix_a, matrix_b, matrix_result_1, SIZE, current_node);
 
@@ -133,9 +141,9 @@ int main(int argc, char *argv[])
     }
     else if (current_node = receiver) // second node
     {
-       PrintMatrix(matrix_result_2, matrix_a_height, matrix_b_width, "In receiver, printing mat res 2");
+       PrintMatrixLinear(matrix_result_2, matrix_a_height * matrix_b_width, "In receiver, printing mat res 2");
 
-       PrintMatrix(matrix_result_1, matrix_a_height, matrix_b_width, "In receiver, printing mat res 1");
+       PrintMatrixLinear(matrix_result_1, matrix_a_height * matrix_b_width, "In receiver, printing mat res 1");
 
         /*
         MPI_Recv(matrix_a, SIZE, MPI_DOUBLE, sender, tag_unused, MPI_COMM_WORLD, &status);
