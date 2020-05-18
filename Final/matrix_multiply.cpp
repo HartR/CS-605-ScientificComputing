@@ -15,10 +15,8 @@ int matrix_result_length;
 
 void PopulateMatrix(double* matrix, int length)
 {
-    for (int i = 0; i < outer; ++i) {
-        for (int j = 0; j < inner; ++j) {
-            matrix[i * inner + j] = ((double)rand() / (RAND_MAX));
-        }
+    for (int i = 0; i < length; ++i) {
+            matrix[i] = ((double)rand() / (RAND_MAX));
     }
 }
 
