@@ -12,6 +12,10 @@ using namespace std;
 
  __global__ void __multiply__ (double* a, double* b, double* c, int matrix_1_height, int matrix_1_width_matrix_2_height, int matrix_2_width, int offset)
  {
+
+     c[0] = 2020 + offset;
+     c[1] = 6565656 + offset;
+      /*
      int i = blockIdx.y * blockDim.y + threadIdx.y; 
      int j = blockIdx.x * blockDim.x + threadIdx.x;
      int sum = 0;
@@ -28,6 +32,9 @@ using namespace std;
          //printf("\matrix_1_width_matrix_2_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_2_width + j + offset, c[i * matrix_2_width + j + offset], a[i], b[i]);
 
      }
+
+
+     */
      /*int pixel = blockIdx.x * blockDim.x + threadIdx.x;
      if (pixel < half_length)
      {
@@ -90,8 +97,6 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
      __multiply__ <<<dimGrid, dimBlock>>> (mat_a_device, mat_b_device, mat_result_device, matrix_1_height, matrix_1_width_matrix_2_height, matrix_2_width, offset);
      cudaMemcpy(mat_result, mat_result_device, sizeof(double)*matrix_1_height*matrix_2_width, cudaMemcpyDeviceToHost);
 
-     mat_result[0] = 9999;
-     mat_result[1] = 7777;
      cudaStatus = cudaGetLastError();
      if (cudaStatus != cudaSuccess) {
           fprintf(stderr, "addKernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
