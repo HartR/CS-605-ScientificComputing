@@ -17,21 +17,9 @@ using namespace std;
      int i = blockIdx.y * blockDim.y + threadIdx.y; 
      int j = blockIdx.x * blockDim.x + threadIdx.x;
 
-     if( offset <= i && i < matrix_a_height * matrix_b_width) 
+     if( j < matrix_b_width && i < matrix_a_height) 
      {
-         printf ("%d is i\n", i); 
-         for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
-         {
-               c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + k] * b[k * matrix_b_width + j];
-               //printf("\n is %d, a is %f, b is %f", i, a[i * matrix_a_width_matrix_b_height + i], b[i * matrix_b_width + j]);
-         }
-         //printf("c[%i] is %f\n", i * matrix_b_width + j, c[i * matrix_b_width + j]);
-         //printf("\matrix_a_width_matrix_b_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_b_width + j + offset, c[i * matrix_b_width + j + offset], a[i], b[i]);    
-     }
-
-     if( offset >= i && i < matrix_a_height * matrix_b_width) 
-     {
-          //printf ("%d is i and %d is offset", i, offset); 
+         printf ("%d is i, %d is j\n", i, j); 
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
          {
                c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + k] * b[k * matrix_b_width + j];
