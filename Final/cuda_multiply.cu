@@ -19,10 +19,10 @@ __device__ int counter;
      j+= offset;
      
      //printf ("ONE: %d is i, %d is j, width is %d, height is%d\n", i, j, matrix_b_width, matrix_a_height); 
-
-     if( counter < mat_result_length/2 && j < matrix_b_width * matrix_a_height) 
+     int coutner_val = atomicAdd(&counter, 1);
+     if( coutner_val < mat_result_length/2 && j < matrix_b_width * matrix_a_height) 
      {
-         printf ("TWO: %d is i, offset is%d\n", i, offset); 
+         printf ("TWO: %d is i, offset is%d, counterval is %d\n", i, offset, coutner_val); 
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
          {
                c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + k] * b[k * matrix_b_width + j];
