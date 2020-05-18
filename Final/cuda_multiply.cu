@@ -16,10 +16,11 @@ using namespace std;
       
      int i = blockIdx.y * blockDim.y + threadIdx.y; 
      int j = blockIdx.x * blockDim.x + threadIdx.x;
+     printf ("ONE: %d is i, %d is j, width is %d, height is%d\n", i, j, matrix_b_width, matrix_a_height); 
 
      if( j < matrix_b_width && i < matrix_a_height) 
      {
-         printf ("%d is i, %d is j, width is %d, height is%d\n", i, j, matrix_b_width, matrix_a_height); 
+         printf ("TWO: %d is i, %d is j, width is %d, height is%d\n", i, j, matrix_b_width, matrix_a_height); 
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
          {
                c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + k] * b[k * matrix_b_width + j];
