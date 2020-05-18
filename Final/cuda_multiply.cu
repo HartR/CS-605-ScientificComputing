@@ -17,7 +17,7 @@ using namespace std;
      int i = blockIdx.y * blockDim.y + threadIdx.y; 
      int j = blockIdx.x * blockDim.x + threadIdx.x;
 
-     if( j < matrix_b_width && i < matrix_a_height) 
+     if( i < matrix_a_height * matrix_b_width) 
      {
           
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
@@ -98,7 +98,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
      cudaMemcpy(mat_result, mat_result_device, sizeof(double)*matrix_a_height*matrix_b_width, cudaMemcpyDeviceToHost);
 
      printf("\n result in buda before, with offset %d \n", offset);
-     for (int i = 0; i < matrix_a_height * matrix_a_width_matrix_b_height; i++)
+     for (int i = 0; i < matrix_a_height * matrix_b_width; i++)
           printf("%d: %f, ", i, mat_result[i]);
      printf("\n");
      cudaStatus = cudaGetLastError();
