@@ -17,10 +17,10 @@ using namespace std;
      int sum = 0;
      if( j < matrix_2_width && i < matrix_1_height) 
      {
-         for(int matrix_2_width = 0; matrix_2_width < matrix_1_width_matrix_2_height; matrix_2_width++) 
+         for(int k = 0; k < matrix_1_width_matrix_2_height; k++) 
          {
                c[i * matrix_2_width + j] += a[i * matrix_1_width_matrix_2_height + matrix_2_width] * b[matrix_2_width * matrix_2_width + j];
-               printf("\ni is %d, a is %f, b is %f", i, a[i * matrix_1_width_matrix_2_height + i], b[i * matrix_2_width + j]);
+               //printf("\ni is %d, a is %f, b is %f", i, a[i * matrix_1_width_matrix_2_height + i], b[i * matrix_2_width + j]);
          }
          printf("sum is %f\n", sum);
          c[i * matrix_2_width + j] = sum;
@@ -59,7 +59,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
 
      //figure out ideal thread/block numbers
      //I'matrix_1_height using 256 threads, because we found that to be optimal from assignment 4
-     int thread_number = 256;
+     /*int thread_number = 256;
      int block_number = 1;
      int array_length = matrix_1_height*matrix_2_width;
      if(array_length < thread_number)
@@ -71,7 +71,7 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
           //get the ceiling of the division
           block_number = (array_length + thread_number - 1)/thread_number;
      }
-     int offset = host_id * ((matrix_1_height*matrix_2_width)/2);
+     int offset = host_id * ((matrix_1_height*matrix_2_width)/2);*/
 
      //thread_number*block_number == array_length/2
      cudaMalloc((void**)&mat_a_device, sizeof(double)*matrix_1_height*matrix_1_width_matrix_2_height);
