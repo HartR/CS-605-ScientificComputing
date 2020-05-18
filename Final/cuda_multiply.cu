@@ -17,55 +17,29 @@ __device__ int counter;
      int i = blockIdx.y * blockDim.y + threadIdx.y; 
      int j = blockIdx.x * blockDim.x + threadIdx.x;
 
-     //printf ("ONE: %d is i, %d is j, width is %d, height is%d\n", i, j, matrix_b_width, matrix_a_height); 
-     int counter_val = atomicAdd(&counter, 1);
-     if(counter_val < mat_result_length/2 && offset == 0) 
+     //I tried many solutions, but this is the only one that worked. It's not elegent, but it will have to do.
+     //I have a counter to check which iteration I'm on. Because we can't ensure that the kernel will be called the 
+     //Correct number of times as there are elements in the result matrix
+     //The offset variable is at the halfpoint of the result matrix size
+     //this ensures that the multiplication work will be done 
+     //int counter_val = atomicAdd(&counter, 1);
+     if(j < mat_result_length/2 && offset == 0) 
      {
-         printf ("TWO: %d is i, offset is%d, counterval is %d\n", i, offset, counter_val); 
+          printf ("TWO: %d is j, offset is%d, counterval is %d\n", j, offset, counter_val); 
+
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
          {
                c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + k] * b[k * matrix_b_width + j];
-               //printf("\n is %d, a is %f, b is %f", i, a[i * matrix_a_width_matrix_b_height + i], b[i * matrix_b_width + j]);
          }
-         //printf("c[%i] is %f\n", i * matrix_b_width + j, c[i * matrix_b_width + j]);
-         //printf("\matrix_a_width_matrix_b_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_b_width + j + offset, c[i * matrix_b_width + j + offset], a[i], b[i]);    
      }
-     else if (counter_val > offset && counter_val < mat_result_length/2 + offset) 
+     else if (j > offset && j < mat_result_length/2 + offset) 
      {
-         printf ("ONE: %d is i, offset is%d, counterval is %d\n", i, offset, counter_val); 
+         printf ("ONE: %d is j, offset is%d, counterval is %d\n", j, offset, counter_val); 
          for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
          {
                c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + k] * b[k * matrix_b_width + j];
-               //printf("\n is %d, a is %f, b is %f", i, a[i * matrix_a_width_matrix_b_height + i], b[i * matrix_b_width + j]);
-         }
-         //printf("c[%i] is %f\n", i * matrix_b_width + j, c[i * matrix_b_width + j]);
-         //printf("\matrix_a_width_matrix_b_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_b_width + j + offset, c[i * matrix_b_width + j + offset], a[i], b[i]);    
+         }     
      }
-     /*
-     if(i ==0 && j==0)
-     {
-          printf("\n a in cuda, with offset %d \n", offset);
-          for (int i = 0; i < matrix_a_height * matrix_a_width_matrix_b_height; i++)
-               printf("%d: %f, ", i, a[i]);
-          printf("\n");
-
-          printf("\n b in cuda, with offset %d \n", offset);
-          for (int i = 0; i < matrix_a_width_matrix_b_height * matrix_b_width; i++)
-               printf("%d: %f, ", i, b[i]);
-          printf("\n");
-     }*/
-     
-
-
-
-     
-     /*int pixel = blockIdx.x * blockDim.x + threadIdx.x;
-     if (pixel < half_length)
-     {
-          printf("\nIn matrix b, current value in result: %f, value at %d: %f, ", result[pixel], pixel, b[pixel]);
-          result[pixel] = b[pixel+offset];
-     }
-     printf("\matrix_a_width_matrix_b_height\matrix_a_width_matrix_b_height");*/
  }
 
  
