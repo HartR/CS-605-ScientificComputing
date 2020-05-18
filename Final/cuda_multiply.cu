@@ -10,22 +10,24 @@
  
 using namespace std;
 
- __global__ void __multiply__ (double* a, double* b, double* c, int m, int n, int k, int offset)
+ __global__ void __multiply__ (double* a, double* b, double* c, int matrix_a_height, int matrix_a_width_matrix_b_height, int matrix_b_width, int offset)
  {
      
       
-     int row = blockIdx.y * blockDim.y + threadIdx.y; 
-     int col = blockIdx.x * blockDim.x + threadIdx.x;
-     int sum = 0;
-     if( col < k && row < m) 
+     int i = blockIdx.y * blockDim.y + threadIdx.y; 
+     int j = blockIdx.x * blockDim.x + threadIdx.x;
+
+     if( j < matrix_b_width && i < matrix_a_height) 
      {
-         for(int i = 0; i < n; i++) 
+          
+         for(int k = 0; k < matrix_a_width_matrix_b_height; k++) 
          {
-             sum += a[row * n + i] * b[i * k + col];
+               c[i * matrix_b_width + j] += a[i * matrix_a_width_matrix_b_height + matrix_b_width] * b[matrix_b_width * matrix_b_width + j];
+               //printf("\ni is %d, a is %f, b is %f", i, a[i * matrix_a_width_matrix_b_height + i], b[i * matrix_b_width + j]);
          }
-         c[row * k + col] = sum;
+         //printf("\matrix_a_width_matrix_b_height At location %d, in c, assigned value %f, sum is %f, value of a is %f, val of b is %f", i * matrix_b_width + j + offset, c[i * matrix_b_width + j + offset], a[i], b[i]);    
      }
-     /*
+     
      if(i ==0 && j==0)
      {
           printf("\n a in cuda, with offset %d \n", offset);
@@ -38,7 +40,7 @@ using namespace std;
                printf("%d: %f, ", i, b[i]);
           printf("\n");
      }
-     */
+     
 
 
 
@@ -85,14 +87,13 @@ void MatrixMultiplyCuda(double* mat_a, double* mat_b, double* mat_result, int ma
      cudaMemcpy(mat_a_device, mat_a, sizeof(double)*matrix_a_height*matrix_a_width_matrix_b_height, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_b_device, mat_b, sizeof(double)*matrix_a_width_matrix_b_height*matrix_b_width, cudaMemcpyHostToDevice);
      cudaMemcpy(mat_result_device, mat_result, sizeof(double)*matrix_a_height*matrix_b_width, cudaMemcpyHostToDevice);
-     //PrintMatrix(mat_result, sqrt(array_length), host_id);
 
      unsigned int grid_rows = (matrix_a_height + BLOCK_SIZE - 1) / BLOCK_SIZE;
      unsigned int grid_cols = (matrix_b_width + BLOCK_SIZE - 1) / BLOCK_SIZE;
      dim3 dimGrid(grid_cols, grid_rows);
      dim3 dimBlock(BLOCK_SIZE, BLOCK_SIZE);
 
-     __multiply__ <<<dimGrid, dimBlock>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset);
+     __multiply__ <<<5, 6>>> (mat_a_device, mat_b_device, mat_result_device, matrix_a_height, matrix_a_width_matrix_b_height, matrix_b_width, offset);
      cudaMemcpy(mat_result, mat_result_device, sizeof(double)*matrix_a_height*matrix_b_width, cudaMemcpyDeviceToHost);
 
      printf("\n result in buda before, with offset %d \n", offset);
